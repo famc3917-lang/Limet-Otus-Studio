@@ -1,0 +1,8 @@
+{
+  "name": "@limet/image-optimizer-disabled",
+  "version": "0.0.0",
+  "main": "index.cjs",
+  "license": "GPL-3.0-only",
+  "author": "博成 · FMLC",
+  "description": "Project-authored fail-closed adapter: Studio uses unoptimized images and does not ship the optional native image optimizer."
+}

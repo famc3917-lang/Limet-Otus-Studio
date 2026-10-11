@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 博成 · FMLC
+// Additional terms: see ADDITIONAL_TERMS.md
+/** English counterparts of the existing editable templates. These are not legal advice. */
+export const PRIVACY_STATEMENT_EN="This form records only the client nickname, shoot arrangements and business information necessary to provide the photography service. For minors, the operator must verify and obtain guardian consent. Records are used only for service fulfilment, delivery and after-sales support, and are cleared under the retention policy. Original evidence and external copies are managed separately by the operator. Copyright and permitted uses of photographs are subject to the agreement between the parties. I have read and understood this statement.";
+export const PAYMENT_REFUND_STATEMENT_EN="Please read the following payment and refund terms. 1. Payments are made in the instalments shown above; each instalment is the order total multiplied by its share. 2. Refunds are based on payments received and use the share in the table above for the number of days between the request and the shoot date. Costs already incurred for this order may be deducted after they have been explained to the client. 3. If the studio cannot complete the shoot, all payments received will be refunded, or the shoot will be rescheduled by mutual agreement. 4. Any other matters will be settled by agreement between the parties. I have read and understood these terms.";
+export const AGREEMENT_CONFIRMATION_EN="I have read and agree to the Privacy and Copyright Statement and the Payment and Refund Terms above. Confirm through the agreed communication channel or sign the electronic booking form." ;
+export const PRINT_FINANCIAL_NOTICE_EN='Amounts are estimates only and may be inaccurate. Not for bookkeeping, tax filing or statutory financial evidence.';
+export const PRINT_FINANCIAL_NOTICE_ZH='金额仅供内部参考，不保证准确；不可用于记账、报税或代替原始凭证。';

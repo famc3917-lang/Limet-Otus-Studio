@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx eslint .
+      - run: node scripts/assert-open-edition.cjs
+      - run: node scripts/audit-public-docs.cjs
+      - run: npm run check
+      - run: npm run test:team
+      - run: npm run test:v3-workflow
+      - run: npm run test:retention
+      - run: npm run build:api

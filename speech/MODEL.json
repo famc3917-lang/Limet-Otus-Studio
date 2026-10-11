@@ -1,0 +1,19 @@
+{
+  "model": "SenseVoiceSmall",
+  "parameters": "234M",
+  "quantization": "INT8",
+  "runtime": "sherpa-onnx-node 1.13.8",
+  "origin": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17.tar.bz2",
+  "files": [
+    {
+      "name": "model.int8.onnx",
+      "Hash": "C71F0CE00BEC95B07744E116345E33D8CBBE08CEF896382CF907BF4B51A2CD51"
+    },
+    {
+      "name": "tokens.txt",
+      "Hash": "F449EB28DC567533D7FA59BE34E2ABCA8784F771850C78A47FB731A31429A1DC"
+    }
+  ],
+  "license": "models/FunASR-MODEL-LICENSE.txt; original model LICENSE reference retained",
+  "archiveSha256": "7D1EFA2138A65B0B488DF37F8B89E3D91A60676E416F515B952358D83DFD347E"
+}

@@ -1,0 +1,10 @@
+node_modules
+.next*
+release*
+work
+.git
+.env*
+cloud/.env
+*.sqlite*
+dist-api
+

@@ -1,0 +1,66 @@
+{
+  "name": "studio",
+  "version": "3.0.0",
+  "private": true,
+  "main": "electron/main.cjs",
+  "description": "观隅 · Limet Otus Studio 摄影业务管理系统",
+  "author": "博成 · FMLC",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --webpack && node scripts/prune-speech-trace.cjs",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test:security": "node tests/security.cjs",
+    "build:api": "node scripts/build-api.cjs",
+    "start:api": "node dist-api/server.cjs",
+    "build:desktop": "next build --webpack && node scripts/prune-speech-trace.cjs",
+    "inventory": "node scripts/inventory.cjs",
+    "check": "npm run typecheck && npm run test:errors && npm run test:security && npm run test:ai && npm run test:first-run && npm run test:desktop && npm run test:speech && npm run test:assistant && npm run test:cli",
+    "release": "powershell -NoProfile -File scripts/package-release.ps1",
+    "test:desktop": "node tests/desktop.cjs && node tests/drafts.cjs",
+    "test:speech": "node tests/speech.cjs",
+    "test:voice-ui": "electron tests/voice-ui.cjs",
+    "test:first-run": "node tests/bootstrap.cjs",
+    "test:ai": "node tests/ai-integrations.cjs",
+    "test:assistant": "node tests/assistant-v23.cjs && node tests/auto-speech.cjs",
+    "test:team": "node tests/team.cjs",
+    "test:retention": "node tests/retention.cjs",
+    "test:v3-workflow": "node tests/v3-workflow.cjs",
+    "test:cli": "node tests/cli-locale.cjs",
+    "test:errors": "node tests/error-catalog.cjs && node scripts/generate-error-reference.cjs --check"
+  },
+  "dependencies": {
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "lucide-react": "^1.37.0",
+    "next": "^16.3.8",
+    "pg": "^8.23.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "typescript": "^5",
+    "sharp": "file:./packages/image-optimizer-disabled"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "@types/node": "^24.19.1",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "electron": "^44.0.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^9",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.21",
+    "typescript-eslint": "^8.46.0"
+  },
+  "productName": "观隅鸮馆",
+  "license": "GPL-3.0-only",
+  "overrides": {
+    "sharp": "$sharp"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

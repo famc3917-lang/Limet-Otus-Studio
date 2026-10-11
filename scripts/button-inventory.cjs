@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 博成 · FMLC
+// Additional terms: see ADDITIONAL_TERMS.md
+'use strict';
+const fs=require('fs'),path=require('path'),ts=require('typescript');const root=path.resolve(__dirname,'..'),rows=[];
+function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())walk(file);else if(file.endsWith('.tsx')){const source=ts.createSourceFile(file,fs.readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);function visit(node){if(ts.isJsxOpeningElement(node)||ts.isJsxSelfClosingElement(node)){const tag=node.tagName.getText(source);if(tag==='button'||tag==='Btn')rows.push({file:path.relative(root,file).replaceAll('\\','/'),line:source.getLineAndCharacterOfPosition(node.getStart(source)).line+1,kind:tag});}ts.forEachChild(node,visit);}visit(source);}}}
+walk(path.join(root,'src'));const data={generatedAt:new Date().toISOString(),definition:'JSX button 声明点和 Btn 调用点；含共享组件定义，map 循环仅算一处，不是当前屏幕实际按钮数量',nativeButtonDeclarations:rows.filter(r=>r.kind==='button').length,wrapperCallSites:rows.filter(r=>r.kind==='Btn').length,totalSourceSites:rows.length,rows};fs.writeFileSync(path.join(root,'docs/button-source-inventory.json'),JSON.stringify(data,null,2));console.log(JSON.stringify({nativeDeclarations:data.nativeButtonDeclarations,wrapperCallSites:data.wrapperCallSites,totalSourceSites:data.totalSourceSites}));

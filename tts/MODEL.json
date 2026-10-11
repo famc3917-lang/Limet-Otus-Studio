@@ -1,0 +1,33 @@
+{
+  "model": "CosyVoice-300M-SFT",
+  "repository": "FunAudioLLM/CosyVoice-300M-SFT",
+  "revision": "fbb71de2afe387ed854eebd80b9f3d078c6b9869",
+  "license": "Apache-2.0",
+  "files": [
+    {
+      "name": "cosyvoice.yaml",
+      "sha256": "5475b9b2f788f3ddd3798898041197e076d20cb2ea783ef9638e6eed36ba16db",
+      "bytes": 6421
+    },
+    {
+      "name": "spk2info.pt",
+      "sha256": "e3b1d62ca87cdcb25a9003fa0c8f2cba5c94f55b0d5f80f0b63ef8c22d919cfc",
+      "bytes": 7772
+    },
+    {
+      "name": "llm.pt",
+      "sha256": "d198ce56636e1eb1c9d0cb0d6e3529de8fdfd3fd45075c346296b0d6dcfc54ea",
+      "bytes": 1242994835
+    },
+    {
+      "name": "flow.pt",
+      "sha256": "21eae78c105b5e1c6c337b04f667843377651b4bcfb2d43247ed3ad7fd0a3470",
+      "bytes": 419900943
+    },
+    {
+      "name": "hift.pt",
+      "sha256": "91e679b6ca1eff71187ffb4f3ab0444935594cdcc20a9bd12afad111ef8d6012",
+      "bytes": 81896716
+    }
+  ]
+}

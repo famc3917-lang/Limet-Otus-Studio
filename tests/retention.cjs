@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 博成 · FMLC
+// Additional terms: see ADDITIONAL_TERMS.md
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..'),temp=fs.mkdtempSync(path.join(os.tmpdir(),'limet-otus-retention-test-')),output=path.join(temp,'probe.cjs');
+require('esbuild').buildSync({entryPoints:[path.join(__dirname,'retention.ts')],outfile:output,bundle:true,platform:'node',format:'cjs',target:'node24',packages:'external',tsconfig:path.join(root,'tsconfig.json'),alias:{'@':path.join(root,'src')}});
+const result=spawnSync(process.execPath,[output],{cwd:root,env:{...process.env,NODE_PATH:path.join(root,'node_modules'),STUDIO_DATA_DIR:temp,STUDIO_MASTER_KEY:crypto.randomBytes(32).toString('base64'),DATABASE_URL:'',STUDIO_SETUP_TOKEN:'synthetic-setup',STUDIO_DESKTOP:'0',STUDIO_ORIGINS:'http://localhost',NODE_ENV:'test'},stdio:'inherit',timeout:60000});
+const assert=require('node:assert/strict'),guard=require('../electron/order-privacy.cjs');
+async function nativeProbe(){const previous=process.env.STUDIO_REMOTE_API_URL;delete process.env.STUDIO_REMOTE_API_URL;try{let called=false;const event={sender:{session:{cookies:{get:async()=>[{name:'test',value:'synthetic'}]}}}};await guard(event,'http://localhost','order-a',async(url,options)=>{called=true;assert.ok(url.endsWith('orderId=order-a'));assert.equal(options.headers.Cookie,'test=synthetic');return {ok:true,json:async()=>({available:true})};});assert.ok(called);await assert.rejects(()=>guard(event,'http://localhost','order-a',async()=>({ok:false})));await assert.rejects(()=>guard(event,'http://localhost','order-a',async()=>({ok:true,json:async()=>({available:false})})));console.log('PASS desktop proof guard refuses deleted or unavailable orders');}finally{if(previous===undefined)delete process.env.STUDIO_REMOTE_API_URL;else process.env.STUDIO_REMOTE_API_URL=previous;}}
+console.log('Synthetic retention probe:',temp);if(result.error)console.error(result.error.message);nativeProbe().then(()=>process.exit(result.status??1)).catch(e=>{console.error(e);process.exit(1);});

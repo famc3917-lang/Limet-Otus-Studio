@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability / 报告漏洞
+    url: ../../security/advisories/new
+    about: Please report vulnerabilities privately. / 请私下报告漏洞。

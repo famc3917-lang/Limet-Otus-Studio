@@ -1,0 +1,7 @@
+{
+  "uvVersion": "0.11.8",
+  "uvSha256": "c3f337907f233811954d96e0ecf2d46df094413250ebdcd10d40d9b5c48febd2",
+  "python": "3.11.15",
+  "cosyVoiceCommit": "074ca6dc9e80a2f424f1f74b48bdd7d3fea531cc",
+  "matchaCommit": "dd9105b34bf2be2230f4aa1e4769fb586a3c824e"
+}

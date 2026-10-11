@@ -1,0 +1,78 @@
+# 观隅鸮馆 Limet Otus Studio · electron-builder configuration (Windows installer and portable build)
+appId: com.bocheng.photostudio
+productName: 观隅鸮馆
+copyright: Copyright © 2026 博成 · FMLC
+afterPack: electron/after-pack.cjs
+asar: true
+electronDist: node_modules/electron/dist
+compression: normal
+asarUnpack:
+  - "**/*.node"
+
+directories:
+  output: release-v3.0.0
+  buildResources: build
+
+files:
+  - electron/**/*
+  - package.json
+  - public/brand/limen-mark.png
+  - LICENSE
+  - LICENSE-ASSETS.md
+
+# 把 Next standalone 服务器、静态资源、公共资源打进 resources/server
+extraResources:
+  - from: third-party
+    to: third-party
+  - from: .next-upgrade/standalone
+    to: server
+    # 本机预览可能把这些目录复制进 standalone；由下面两项统一提供，避免并行重复写入。
+    filter:
+      - "**/*"
+      - "!.next-upgrade/static/**/*"
+      - "!public/**/*"
+      - "!speech/**/*"
+      - "!tts/**/*"
+  - from: .next-upgrade/static
+    to: server/.next-upgrade/static
+  - from: public
+    to: server/public
+  - from: build/icon.png
+    to: icon.png
+  - from: speech
+    to: speech
+    filter:
+      - "worker.cjs"
+      - "package*.json"
+      - "MODEL.json"
+      - "models/**/*"
+      - "FunASR-MODEL-LICENSE.txt"
+
+  - from: tts
+    to: tts
+    filter:
+      - "*.py"
+      - "*.json"
+      - "requirements*.txt"
+      - "model/**/*"
+      - "bin/*"
+      - "vendor/CosyVoice/cosyvoice/**/*"
+      - "vendor/CosyVoice/LICENSE"
+      - "vendor/CosyVoice/README.md"
+      - "vendor/CosyVoice/third_party/Matcha-TTS/matcha/**/*"
+      - "vendor/CosyVoice/third_party/Matcha-TTS/LICENSE"
+      - "!.runtime/**/*"
+      - "!**/.git"
+      - "!**/.git/**/*"
+      - "!**/__pycache__/**/*"
+
+win:
+  # The installer is built separately by installer/build-installer.ps1 from the unpacked folder.
+  target:
+    - portable
+  icon: build/icon.ico
+  # 仅关闭代码签名；保留品牌图标和版本元数据写入。
+  signExecutable: false
+
+portable:
+  artifactName: LimetOtusStudio-Portable-${version}-${arch}.${ext}

@@ -1,0 +1,47 @@
+# dependencies
+node_modules/
+
+# build output
+.next/
+out/
+release/
+
+# env
+.env
+.env.local
+
+# runtime data, databases and secrets
+/data/
+/user-data/
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
+*.p12
+*.pfx
+cloud/.env
+
+# temp
+tmp-*.json
+find-cleanup.ps1
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+.cache/
+
+# Rebuildable speech and release resources
+/tts/.runtime/
+/tts/vendor/
+/tts/bin/
+/speech/node_modules/
+/speech/models/
+.next-*/
+release-v*/
+dist-api/
+
+
+/tts/model/
+/test-results/

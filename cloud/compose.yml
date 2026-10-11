@@ -1,0 +1,71 @@
+name: limet-otus-studio
+services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: studio
+      POSTGRES_USER: studio
+      POSTGRES_PASSWORD: ${STUDIO_DB_PASSWORD:?Set STUDIO_DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studio -d studio"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks: [internal]
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: api
+    restart: unless-stopped
+    depends_on:
+      db: {condition: service_healthy}
+    environment:
+      DATABASE_URL: postgres://studio:${STUDIO_DB_PASSWORD:?Set STUDIO_DB_PASSWORD}@db:5432/studio
+      STUDIO_MASTER_KEY: ${STUDIO_MASTER_KEY:?Set STUDIO_MASTER_KEY}
+      # Needed only for the first studio setup; may be emptied afterwards. An empty token never authorises setup.
+      STUDIO_SETUP_TOKEN: ${STUDIO_SETUP_TOKEN:-}
+      STUDIO_ORIGINS: ${STUDIO_ORIGIN:?Set STUDIO_ORIGIN}
+      # Optional: comma-separated self-hosted hosts allowed on private networks or plain HTTP.
+      STUDIO_AI_ALLOWED_HOSTS: ${STUDIO_AI_ALLOWED_HOSTS:-}
+      STUDIO_WEATHER_ALLOWED_HOSTS: ${STUDIO_WEATHER_ALLOWED_HOSTS:-}
+      STUDIO_API_ORIGIN: ${STUDIO_ORIGIN:?Set STUDIO_ORIGIN}
+      STUDIO_DATA_DIR: /var/lib/studio/data
+      STUDIO_SPEECH_RUNTIME: /app/speech
+    volumes:
+      - api-data:/var/lib/studio/data
+    networks: [internal]
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: web
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ""
+    restart: unless-stopped
+    depends_on: [api]
+    networks: [internal]
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [web, api]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      STUDIO_DOMAIN: ${STUDIO_DOMAIN:?Set STUDIO_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [internal]
+networks:
+  internal: {}
+volumes:
+  db-data: {}
+  api-data: {}
+  caddy-data: {}
+  caddy-config: {}

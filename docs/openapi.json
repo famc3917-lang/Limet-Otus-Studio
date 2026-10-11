@@ -1,0 +1,4065 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "观隅 · Limet Otus Studio API",
+    "version": "3.0.0",
+    "description": "Session mutations require X-Studio-CSRF. API keys never grant account/key/provider administration. See docs/English/Developer-manual.md for field semantics, exact responses and scope rules."
+  },
+  "servers": [
+    {
+      "url": "https://studio.example.invalid"
+    }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Service readiness",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/status": {
+      "get": {
+        "summary": "Workspace initialized and first-use setup mode",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "initialized": {
+                      "type": "boolean"
+                    },
+                    "setupMode": {
+                      "enum": [
+                        "desktop",
+                        "setup-token",
+                        "unavailable"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/bootstrap": {
+      "post": {
+        "summary": "Create first workspace/owner",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "realName": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "workspaceName": {
+                    "type": "string"
+                  },
+                  "setupToken": {
+                    "type": "string"
+                  },
+                  "accounts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "passHash": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Create session",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Redeem invitation",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "realName": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "invitation": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "summary": "Session role/scopes and CSRF",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "summary": "Revoke current session",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/members": {
+      "get": {
+        "summary": "Workspace member directory",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Change role/status and revoke sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "$ref": "#/components/schemas/Role"
+                  },
+                  "disabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/invitations": {
+      "post": {
+        "summary": "Create one-use 48-hour invitation",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/keys": {
+      "get": {
+        "summary": "Key metadata only",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create and automatically store an encrypted integration credential",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Scope"
+                    }
+                  },
+                  "days": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 365
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Export stored key after password verification (session only)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Revoke key and erase encrypted copy",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/audit": {
+      "get": {
+        "summary": "Latest 200 security events",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/password": {
+      "post": {
+        "summary": "Change password and invalidate all sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currentPassword": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/state": {
+      "get": {
+        "summary": "Projected workspace snapshot or unchanged status",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "revision",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Matching revision returns {revision,unchanged:true}, with no data body."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "put": {
+        "summary": "Optimistic whole-workspace update (session only)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/AppData"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/commands": {
+      "get": {
+        "summary": "Discover compiled commands",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Execute scoped command",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]{8,120}$"
+            },
+            "description": "Optional request retry identity, retained 24 hours."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/ai/provider": {
+      "get": {
+        "summary": "Provider metadata without key",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "put": {
+        "summary": "Save provider (session only)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "protocol": {
+                    "enum": [
+                      "openai",
+                      "anthropic"
+                    ]
+                  },
+                  "baseUrl": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "apiKey": {
+                    "type": "string"
+                  },
+                  "plugins": {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "business-read",
+                        "business-write",
+                        "studio-settings",
+                        "weather",
+                        "system",
+                        "web-search"
+                      ]
+                    }
+                  },
+                  "searchApiKey": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/assistant": {
+      "post": {
+        "summary": "Chat or confirm a pending write; no client history accepted",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "conversationId": {
+                    "type": "string"
+                  },
+                  "voiceId": {
+                    "type": "string"
+                  },
+                  "plugins": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "confirmation": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "approved": {
+                        "type": "boolean"
+                      },
+                      "privateFields": {
+                        "type": "object",
+                        "properties": {
+                          "gender": {
+                            "enum": [
+                              "male",
+                              "female",
+                              "nonbinary"
+                            ]
+                          },
+                          "adult": {
+                            "enum": [
+                              "adult",
+                              "minor"
+                            ]
+                          },
+                          "guardianConsent": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "place": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "latitude": {
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "type": "number"
+                      },
+                      "timezone": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/speech": {
+      "get": {
+        "summary": "Built-in recognition availability",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Recognize bounded 16kHz mono PCM without sending to LLM",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pcm": {
+                    "type": "string",
+                    "contentEncoding": "base64"
+                  },
+                  "sampleRate": {
+                    "const": 16000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/ai/models": {
+      "get": {
+        "summary": "Fetch compatible provider models; session administrator only",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/ai/test": {
+      "post": {
+        "summary": "Minimal model test without customer data or business tools; session administrator only",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/ai/plugins": {
+      "get": {
+        "summary": "Read workspace plugin policy and account eligibility",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/ai/status": {
+      "get": {
+        "summary": "Cached provider reachability probe without model generation",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/weather": {
+      "get": {
+        "summary": "Open-Meteo daily weather and shooting advice",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "latitude",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "longitude",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/hardware/authorize": {
+      "get": {
+        "summary": "Current hardware principal",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/hardware/cards": {
+      "get": {
+        "summary": "Card metadata",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enroll Ed25519 public key after owner password verification",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "publicKey": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "finance:write",
+                        "settings:write"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Revoke card and outstanding elevation tickets",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/hardware/challenge": {
+      "post": {
+        "summary": "60-second challenge bound to card/user/workspace/action",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cardId": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "const": "state"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/hardware/verify": {
+      "post": {
+        "summary": "Verify signature; issue 90-second one-use ticket",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "challengeId": {
+                    "type": "string"
+                  },
+                  "signature": {
+                    "type": "string",
+                    "contentEncoding": "base64"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/assistant/control": {
+      "post": {
+        "summary": "Change mounted capabilities and voice at any time",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "conversationId": {
+                    "type": "string"
+                  },
+                  "plugins": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "voiceId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/tts/status": {
+      "get": {
+        "summary": "Voice catalog, readiness and uniform resource policy",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/tts/voices": {
+      "put": {
+        "summary": "Import gender-labelled trained voice metadata (admin session)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "voices": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "speakerId": {
+                          "type": "string"
+                        },
+                        "gender": {
+                          "enum": [
+                            "male",
+                            "female"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/tts/synthesize": {
+      "post": {
+        "summary": "Generate bounded offline speech",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 600
+                  },
+                  "voiceId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/team/members": {
+      "get": {
+        "summary": "Member directory",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/team/profile": {
+      "get": {
+        "summary": "Own display name and real name",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update own display name and real name",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "realName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/team/finance": {
+      "get": {
+        "summary": "Ledger, share plans and summaries",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Record entries, preview, configure or calculate shares",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/retention": {
+      "get": {
+        "summary": "Retention windows, requests and reminders",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Request, approve, snooze, purge or acknowledge external copies",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/retention/order-access": {
+      "get": {
+        "summary": "Whether an order is still accessible (desktop session)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/software/elevation": {
+      "get": {
+        "summary": "Temporary approval grants",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Grant temporary approval",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Revoke temporary approval",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/cli/manual": {
+      "get": {
+        "summary": "CLI manual (super administrator session)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "zh",
+                "en"
+              ]
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "1"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/cli": {
+      "post": {
+        "summary": "Run, confirm or cancel CLI commands (super administrator session)",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/family/capabilities": {
+      "get": {
+        "summary": "Family protocol and capabilities",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/family/orders/{orderId}": {
+      "get": {
+        "summary": "Read-only order reference",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "integrationKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Limet-Family-Protocol",
+            "in": "header",
+            "schema": {
+              "enum": [
+                "1"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success (shape described in docs/English/Developer-manual.md)"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid session/key"
+          },
+          "403": {
+            "description": "Missing scope, invalid CSRF/origin, or forbidden operation"
+          },
+          "409": {
+            "description": "Revision conflict, replay, or incompatible migration"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Configuration/service unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "studio_session"
+      },
+      "integrationKey": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Gender": {
+        "anyOf": [
+          {
+            "const": "male"
+          },
+          {
+            "const": "female"
+          },
+          {
+            "const": "nonbinary"
+          }
+        ]
+      },
+      "AdultStatus": {
+        "anyOf": [
+          {
+            "const": "adult"
+          },
+          {
+            "const": "minor"
+          }
+        ]
+      },
+      "CustomerType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "anyOf": [
+              {
+                "const": "C"
+              },
+              {
+                "const": "J"
+              },
+              {
+                "const": "L"
+              },
+              {
+                "const": "N"
+              }
+            ]
+          },
+          "builtin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix"
+        ]
+      },
+      "PackageTier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "returnCount": {
+            "type": "number"
+          },
+          "returnDays": {
+            "type": "number"
+          },
+          "builtin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "ExtraItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "advanceDays": {
+            "type": "number"
+          },
+          "perUnit": {
+            "type": "boolean"
+          },
+          "unitName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "builtin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "price"
+        ]
+      },
+      "ShootStyle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "builtin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "EquipmentCategory": {
+        "anyOf": [
+          {
+            "const": "相机机身"
+          },
+          {
+            "const": "镜头"
+          },
+          {
+            "const": "灯光"
+          },
+          {
+            "const": "灯光附件"
+          },
+          {
+            "const": "脚架"
+          },
+          {
+            "const": "配件"
+          },
+          {
+            "const": "存储"
+          },
+          {
+            "const": "ND滤镜"
+          }
+        ]
+      },
+      "Equipment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/EquipmentCategory"
+          },
+          "stockInDate": {
+            "type": "string"
+          },
+          "specs": {
+            "type": "string"
+          },
+          "isSdCard": {
+            "type": "boolean"
+          },
+          "builtin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "brand",
+          "category",
+          "stockInDate",
+          "specs"
+        ]
+      },
+      "TimeSeal": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string"
+          },
+          "iso": {
+            "type": "string"
+          },
+          "local": {
+            "type": "string"
+          },
+          "zone": {
+            "type": "string"
+          },
+          "utc": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "event",
+          "iso",
+          "utc"
+        ]
+      },
+      "OrderStage": {
+        "anyOf": [
+          {
+            "const": "prep"
+          },
+          {
+            "const": "shooting"
+          },
+          {
+            "const": "post"
+          },
+          {
+            "const": "done"
+          }
+        ]
+      },
+      "WorkStatus": {
+        "anyOf": [
+          {
+            "const": "pending"
+          },
+          {
+            "const": "in_progress"
+          },
+          {
+            "const": "completed"
+          }
+        ]
+      },
+      "Signature": {
+        "type": "string"
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "signatureMemberId": {
+            "type": "string"
+          },
+          "signatureMemberName": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "customerTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "flow": {
+            "anyOf": [
+              {
+                "const": "awaiting_post"
+              },
+              {
+                "const": "post"
+              },
+              {
+                "const": "awaiting_review"
+              },
+              {
+                "const": "awaiting_delivery"
+              },
+              {
+                "const": "delivered"
+              }
+            ]
+          },
+          "deliveredAt": {
+            "type": "string"
+          },
+          "anonymizedAt": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "orderNo": {
+            "type": "string"
+          },
+          "serial": {
+            "type": "string"
+          },
+          "serialMonth": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "adult": {
+            "$ref": "#/components/schemas/AdultStatus"
+          },
+          "customerTypeId": {
+            "type": "string"
+          },
+          "customerTypeName": {
+            "type": "string"
+          },
+          "packageTierId": {
+            "type": "string"
+          },
+          "packageTierName": {
+            "type": "string"
+          },
+          "orderCreatedAt": {
+            "type": "string"
+          },
+          "shootTime": {
+            "type": "string"
+          },
+          "photographer": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "returnCount": {
+            "type": "number"
+          },
+          "returnTime": {
+            "type": "string"
+          },
+          "extras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtraItem"
+            }
+          },
+          "extraQty": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "needRaw": {
+            "type": "boolean"
+          },
+          "doneAt": {
+            "type": "string"
+          },
+          "totalPrice": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/OrderStage"
+          },
+          "preOrderId": {
+            "type": "string"
+          },
+          "postOrderId": {
+            "type": "string"
+          },
+          "seals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeal"
+            }
+          },
+          "paymentStage": {
+            "type": "number"
+          },
+          "paymentPlan": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstallmentStage"
+            }
+          },
+          "refundRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RefundRule"
+            }
+          },
+          "paymentMethods": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PaymentMethod"
+            }
+          },
+          "paymentProofs": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "refund": {
+            "$ref": "#/components/schemas/RefundRecord"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "orderNo",
+          "serial",
+          "serialMonth",
+          "customerName",
+          "gender",
+          "adult",
+          "customerTypeId",
+          "customerTypeName",
+          "orderCreatedAt",
+          "shootTime",
+          "location",
+          "signature",
+          "stage",
+          "seals",
+          "createdAt"
+        ]
+      },
+      "PaymentMethod": {
+        "type": "string"
+      },
+      "RefundRecord": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "rate": {
+            "type": "number"
+          },
+          "paidAmount": {
+            "type": "number"
+          },
+          "days": {
+            "type": "number"
+          },
+          "ruleText": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "proofImage": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "rate",
+          "paidAmount",
+          "days",
+          "ruleText",
+          "at"
+        ]
+      },
+      "PreOrder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "preNo": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerTypeName": {
+            "type": "string"
+          },
+          "packageTierName": {
+            "type": "string"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "adult": {
+            "$ref": "#/components/schemas/AdultStatus"
+          },
+          "shootTime": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "equipmentCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sdCardCode": {
+            "type": "string"
+          },
+          "sdCardCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "photographer": {
+            "type": "string"
+          },
+          "expense": {
+            "type": "number"
+          },
+          "expenseNote": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string"
+          },
+          "styleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "styleNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkStatus"
+          },
+          "seals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeal"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "preNo",
+          "orderId",
+          "customerName",
+          "customerTypeName",
+          "gender",
+          "adult",
+          "shootTime",
+          "location",
+          "equipmentCodes",
+          "photographer",
+          "styleIds",
+          "styleNames",
+          "signature",
+          "status",
+          "seals",
+          "createdAt"
+        ]
+      },
+      "PostSoftware": {},
+      "PostOrder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "postNo": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerTypeName": {
+            "type": "string"
+          },
+          "shootTime": {
+            "type": "string"
+          },
+          "packageTierName": {
+            "type": "string"
+          },
+          "totalShots": {
+            "type": "number"
+          },
+          "retouchCount": {
+            "type": "number"
+          },
+          "softwares": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostSoftware"
+            }
+          },
+          "returnTime": {
+            "type": "string"
+          },
+          "returnCount": {
+            "type": "number"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkStatus"
+          },
+          "seals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeal"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "postNo",
+          "orderId",
+          "customerName",
+          "customerTypeName",
+          "shootTime",
+          "totalShots",
+          "retouchCount",
+          "softwares",
+          "signature",
+          "status",
+          "seals",
+          "createdAt"
+        ]
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "at",
+          "action"
+        ]
+      },
+      "AppData": {
+        "type": "object",
+        "properties": {
+          "settings": {},
+          "printDocuments": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "version": {
+            "type": "number"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
+          },
+          "preOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreOrder"
+            }
+          },
+          "postOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostOrder"
+            }
+          },
+          "equipments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Equipment"
+            }
+          },
+          "customerTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerType"
+            }
+          },
+          "packageTiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackageTier"
+            }
+          },
+          "shootStyles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShootStyle"
+            }
+          },
+          "extraItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtraItem"
+            }
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEntry"
+            }
+          }
+        },
+        "required": [
+          "version",
+          "orders",
+          "preOrders",
+          "postOrders",
+          "equipments",
+          "customerTypes",
+          "packageTiers",
+          "shootStyles"
+        ]
+      },
+      "PrintTemplate": {
+        "anyOf": [
+          {
+            "const": "white"
+          },
+          {
+            "const": "black"
+          },
+          {
+            "const": "pattern"
+          },
+          {
+            "const": "contract"
+          }
+        ]
+      },
+      "StatementBlock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "html": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "font": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "bold": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "html",
+          "background",
+          "color",
+          "font",
+          "size",
+          "bold"
+        ]
+      },
+      "PrintDocument": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "const": 1
+          },
+          "template": {
+            "$ref": "#/components/schemas/PrintTemplate"
+          },
+          "font": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "background": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "padding": {
+            "type": "number"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatementBlock"
+            }
+          },
+          "sectionOrder": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hiddenSections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "copy": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "version",
+          "template",
+          "font",
+          "size",
+          "background",
+          "color",
+          "padding",
+          "blocks",
+          "sectionOrder",
+          "hiddenSections"
+        ]
+      },
+      "SignatureOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sub": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "StudioSettings": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tagline": {
+            "type": "string"
+          },
+          "dailyLines": {
+            "type": "boolean"
+          },
+          "customLines": {
+            "type": "string"
+          },
+          "reduceMotion": {
+            "type": "boolean"
+          },
+          "accent": {
+            "type": "string"
+          },
+          "backgroundAssistant": {
+            "type": "boolean"
+          },
+          "floatingAssistant": {
+            "type": "boolean"
+          },
+          "autoBackup": {
+            "type": "boolean"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/StudioCurrency"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SignatureOption"
+            }
+          },
+          "orderChannels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "customerTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "paymentMethods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "installments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstallmentStage"
+            }
+          },
+          "refundRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RefundRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "tagline",
+          "dailyLines",
+          "customLines",
+          "reduceMotion",
+          "accent",
+          "backgroundAssistant",
+          "floatingAssistant"
+        ]
+      },
+      "Language": {
+        "anyOf": [
+          {
+            "const": "zh"
+          },
+          {
+            "const": "en"
+          }
+        ]
+      },
+      "Role": {},
+      "Scope": {},
+      "SessionUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "scopes": {}
+        },
+        "required": [
+          "id",
+          "workspaceId",
+          "username",
+          "role",
+          "scopes"
+        ]
+      },
+      "InstallmentStage": {
+        "description": "See the corresponding TypeScript source type; open schema."
+      },
+      "RefundRule": {
+        "description": "See the corresponding TypeScript source type; open schema."
+      },
+      "StudioCurrency": {
+        "description": "See the corresponding TypeScript source type; open schema."
+      },
+      "CommandRequest": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "studio.preferences"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {}
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "studio.configure"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "accent": {
+                    "type": "string",
+                    "pattern": "^#[0-9a-fA-F]{6}$"
+                  },
+                  "reduceMotion": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "studio.catalog"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {}
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "orders.list"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string",
+                    "description": "YYYY-MM-DD"
+                  }
+                }
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "orders.create"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "signatureMemberId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "channel": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "customerTags": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  },
+                  "customerName": {
+                    "type": "string"
+                  },
+                  "customerTypeId": {
+                    "type": "string"
+                  },
+                  "packageTierId": {
+                    "type": "string"
+                  },
+                  "shootTime": {
+                    "type": "string",
+                    "description": "有效的 YYYY-MM-DDTHH:mm，按工作室时区；例如 2026-10-07T15:00。先将相对日期换算为明确日期，不传“明天下午”等自然语言。"
+                  },
+                  "gender": {
+                    "type": "string"
+                  },
+                  "adult": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "photographer": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customerName",
+                  "customerTypeId",
+                  "shootTime",
+                  "gender",
+                  "adult"
+                ]
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "orders.update"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "signatureMemberId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "channel": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "customerTags": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "shootTime": {
+                    "type": "string",
+                    "description": "有效的 YYYY-MM-DDTHH:mm，按工作室时区；例如 2026-10-07T15:00。先将相对日期换算为明确日期，不传“明天下午”等自然语言。"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "photographer": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "orders.deliver"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "pre.status"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "in_progress",
+                      "completed"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "status"
+                ]
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "post.status"
+              },
+              "payload": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "in_progress",
+                      "completed"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "status"
+                ]
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "type",
+              "payload",
+              "revision"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

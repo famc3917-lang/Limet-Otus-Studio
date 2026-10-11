@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "baselineRamGiB": 16,
+  "threads": 4,
+  "concurrency": 1,
+  "idleUnloadSeconds": 90,
+  "workerRamMiB": 5120,
+  "cudaAllocatorMiB": 3072,
+  "minimumFreeCudaMiB": 3584,
+  "maximumTextCharacters": 600,
+  "maximumAudioSeconds": 90,
+  "jobTimeoutSeconds": 240,
+  "startupTimeoutSeconds": 120,
+  "particleCount": 16,
+  "particleFramesPerSecond": 30
+}
