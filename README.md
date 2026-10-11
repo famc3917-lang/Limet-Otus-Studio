@@ -83,6 +83,8 @@ Source code: [GPL-3.0-only](LICENSE), with the notices in [ADDITIONAL_TERMS.md](
 
 Provided as is, without any guarantee of data protection, availability or accurate calculations. Read [NOTICE-AS-IS.md](NOTICE-AS-IS.md).
 
+**Keep your keys.** Data is encrypted, and a lost or damaged master key means the data cannot be recovered by anyone, the developers included. Read [NOTICE-KEYS.md](NOTICE-KEYS.md) before use.
+
 Copyright © 2026 博成 · FMLC.
 
 ---
@@ -157,5 +159,7 @@ npm run dev
 源代码采用 [GPL-3.0-only](LICENSE)，附加声明见 [ADDITIONAL_TERMS.md](ADDITIONAL_TERMS.md)。Logo、插画等原创非代码素材保留权利，不随代码开放授权，见 [LICENSE-ASSETS.md](LICENSE-ASSETS.md)。第三方组件沿用各自许可，见[第三方许可与分发](docs/CN/第三方许可与分发.md)。
 
 软件按现状提供，不保证数据保密、持续可用或计算准确，请阅读[现状与责任说明](NOTICE-AS-IS.md)。
+
+**保管好密钥。** 数据加密保存，主密钥一旦丢失或损坏，任何人都无法恢复数据，包括开发者。使用前请阅读[密钥与数据恢复声明](NOTICE-KEYS.md)。
 
 Copyright © 2026 博成 · FMLC.

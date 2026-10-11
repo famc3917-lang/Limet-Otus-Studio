@@ -6,8 +6,8 @@ const root=path.resolve(process.argv[2]||path.join(__dirname,'..'));
 const files=[],problems=[];
 function walk(dir){if(!fs.existsSync(dir))return;for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(/\.(md|html|txt)$/i.test(e.name))files.push(p);}}
 walk(path.join(root,'docs'));
-for(const name of ['README.md','NOTICE-AS-IS.md','ADDITIONAL_TERMS.md'])if(fs.existsSync(path.join(root,name)))files.push(path.join(root,name));
-const legal=new Set(['NOTICE-AS-IS.md','ADDITIONAL_TERMS.md']);
+for(const name of ['README.md','NOTICE-AS-IS.md','NOTICE-KEYS.md','ADDITIONAL_TERMS.md'])if(fs.existsSync(path.join(root,name)))files.push(path.join(root,name));
+const legal=new Set(['NOTICE-AS-IS.md','NOTICE-KEYS.md','ADDITIONAL_TERMS.md']);
 // Generated error references quote interface messages verbatim; they make no claims.
 const quoted=new Set([path.join('docs','CN','错误与提示参考.md'),path.join('docs','English','Error-reference.md')]);
 for(const file of files){const text=fs.readFileSync(file,'utf8'),relative=path.relative(root,file);for(const [i,raw] of text.split(/\r?\n/).entries()){const line=raw.replace(/`[^`]*`/g,''); // file names in code spans are not claims

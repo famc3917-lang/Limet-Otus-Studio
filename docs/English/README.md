@@ -29,6 +29,7 @@ Limet Otus Studio is a business workspace for independent photographers and smal
 - [Non-code asset rights](../../LICENSE-ASSETS.md)
 - [Third-party licensing](Third-party-licensing.md)
 - [NOTICE-AS-IS.md](../../NOTICE-AS-IS.md)
+- [NOTICE-KEYS.md](../../NOTICE-KEYS.md): keys and data recovery
 
 ## Screenshots and data sources
 

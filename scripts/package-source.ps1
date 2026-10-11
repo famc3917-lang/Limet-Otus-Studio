@@ -18,7 +18,7 @@ $archive=Join-Path $releaseRoot ('source-'+[guid]::NewGuid().ToString('N')+'.zip
 $destination=Join-Path $releaseRoot ('LimetOtusStudio-Source-'+(Get-Content (Join-Path $projectRoot 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json).version+'.zip')
 try {
  New-Item -ItemType Directory -Path $exportRoot | Out-Null
- $entries=@('src','packages','third-party','electron','scripts','tests','public','build','installer','edition.json','package.json','package-lock.json','next.config.ts','tsconfig.json','next-env.d.ts','eslint.config.mjs','postcss.config.mjs','tailwind.config.js','electron-builder.yml','Dockerfile','.dockerignore','.env.example','README.md','.gitignore','LICENSE','LICENSE-ASSETS.md','ADDITIONAL_TERMS.md','NOTICE-AS-IS.md','build.ps1','CONTRIBUTING.md','SECURITY.md','.gitattributes','.editorconfig')
+ $entries=@('src','packages','third-party','electron','scripts','tests','public','build','installer','edition.json','package.json','package-lock.json','next.config.ts','tsconfig.json','next-env.d.ts','eslint.config.mjs','postcss.config.mjs','tailwind.config.js','electron-builder.yml','Dockerfile','.dockerignore','.env.example','README.md','.gitignore','LICENSE','LICENSE-ASSETS.md','ADDITIONAL_TERMS.md','NOTICE-AS-IS.md','NOTICE-KEYS.md','build.ps1','CONTRIBUTING.md','SECURITY.md','.gitattributes','.editorconfig')
  foreach($entry in $entries){Copy-Item -LiteralPath (Join-Path $projectRoot $entry) -Destination $exportRoot -Recurse -Force}
  if(Test-Path -LiteralPath (Join-Path $projectRoot '.github')){Copy-Item -LiteralPath (Join-Path $projectRoot '.github') -Destination $exportRoot -Recurse -Force}
  $docsTarget=Join-Path $exportRoot 'docs'

@@ -61,6 +61,7 @@ Estimated for everyday use by an individual or a very small studio; multi-user l
 5. The master key for business data is kept in `vault-key.dpapi` in that folder, encrypted with the Windows Data Protection API (DPAPI). **It can only be unlocked on the same computer by the same Windows user.** Therefore:
    - Copying the data folder to another computer does not make the business data readable there. To move computers, export a business backup under **Business configuration → Data management → Backup and restore** and import it on the new machine.
    - Reinstalling Windows, recreating the Windows user, or an administrator forcing a password reset for that user can make the key impossible to unlock. Export business backups regularly and keep them elsewhere.
+   - Desktop Git backups are encrypted with the same master key, so they cannot be opened once the key is lost. See [NOTICE-KEYS.md](../../NOTICE-KEYS.md).
 
 The desktop app's local server listens only on `127.0.0.1`; other devices on the network cannot reach it. Use the server edition for team access.
 
@@ -134,7 +135,7 @@ Edit `cloud/.env` and fill in the three random values and your domain:
 
 Key points:
 
-- **The master key decides whether data can be read.** Keep a copy of `STUDIO_MASTER_KEY` apart from both the server and the backups, for example in an offline password manager. If it is lost, existing data cannot be decrypted; if it leaks, treat the data as possibly exposed.
+- **The master key decides whether data can be read.** Keep a copy of `STUDIO_MASTER_KEY` apart from both the server and the backups, for example in an offline password manager. If it is lost, existing data cannot be decrypted; if it leaks, treat the data as possibly exposed. See [NOTICE-KEYS.md](../../NOTICE-KEYS.md).
 - `STUDIO_ORIGIN` must match the browser address exactly (scheme, host and port), otherwise requests fail the origin check.
 - Use fresh random values for every instance; never reuse examples or values from another environment.
 - Never commit `cloud/.env` to a repository or paste it into chats or screenshots.

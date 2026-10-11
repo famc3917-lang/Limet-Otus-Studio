@@ -89,6 +89,8 @@ When the app shows an error, look up its wording in the [Error and message refer
 
 Configure your own Git repository in Preferences, then run a backup from Data management in Business settings. Backups include order data and payment or refund evidence. Payment summaries can be uploaded separately. **Backup and restore** on the same page exports a business backup file (JSON) for moving to another computer or restoring data; it does not include member accounts or API keys.
 
+**Git backups are encrypted with the same master key as the local data: after a disk failure, a Windows reinstall or a change of computer they cannot be opened either. Export JSON backups regularly and keep them elsewhere.** See [NOTICE-KEYS.md](../../NOTICE-KEYS.md).
+
 A failed Git initialisation, staging operation or commit stops the backup. On a push failure, check repository access and connectivity before retrying. A business backup is not a complete server migration package. Follow the [deployment manual](Deployment-manual.md), retain the required service data and verify restoration.
 
 If saving fails, retain the input and resolve the synchronisation notice. Do not repeatedly overwrite conflicting records. Ask the operator to inspect service logs when the server is unavailable. Do not directly edit the database or installation directory during routine use.
