@@ -1,6 +1,6 @@
 # GPLv3 Section 7 notices / GPLv3 第 7 节附加声明
 
-Copyright © 2026 博成 · FMLC.
+Copyright © 2026 FMLC.
 
 The project code marked `SPDX-License-Identifier: GPL-3.0-only` is licensed under the GNU General Public License, version 3 only. The complete, unmodified license text is in `LICENSE`. The following terms apply only to original material for which the copyright holder is authorized to add terms under GPLv3 section 7. They do not remove or narrow any right granted by GPLv3.
 

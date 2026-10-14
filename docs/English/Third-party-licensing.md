@@ -51,4 +51,4 @@ When you redistribute installers or modified versions of this software, observe 
 
 References: [GNU LGPL FAQ](https://www.gnu.org/licenses/gpl-faq.en.html#LGPLStaticVsDynamic), [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html), [LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.en.html).
 
-Copyright © 2026 博成 · FMLC.
+Copyright © 2026 FMLC.

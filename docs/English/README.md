@@ -33,6 +33,6 @@ Limet Otus Studio is a business workspace for independent photographers and smal
 
 ## Screenshots and data sources
 
-Documentation screenshots use fictional demo data; clients, locations, amounts and accounts do not correspond to real business. Rights in the original interface and brand assets shown belong to 博成 · FMLC. Weather and city data in the calendar come from [Open-Meteo](https://open-meteo.com/).
+Documentation screenshots use fictional demo data; clients, locations, amounts and accounts do not correspond to real business. Rights in the original interface and brand assets shown belong to FMLC. Weather and city data in the calendar come from [Open-Meteo](https://open-meteo.com/).
 
 [中文文档](../CN/README.md)

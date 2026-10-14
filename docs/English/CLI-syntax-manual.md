@@ -137,7 +137,7 @@ Other actions: `catalog`, `cancel`, `ai` with `text`. `ImportRule` requests incl
 
 The rendered manual is `GET /api/v1/cli/manual?language=en`; add `&download=1` to download Markdown. The Chinese manual uses `language=zh`.
 
-Copyright © 2026 博成 · FMLC.
+Copyright © 2026 FMLC.
 
 ## V3.0.0 business commands
 

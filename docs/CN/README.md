@@ -33,6 +33,6 @@
 
 ## 截图与数据来源
 
-文档截图使用虚构的演示数据，示例客户、地点、金额与账户不对应真实业务。截图中的原创界面与品牌素材权利归博成 · FMLC 所有。日历中的天气与城市数据来自 [Open-Meteo](https://open-meteo.com/)。
+文档截图使用虚构的演示数据，示例客户、地点、金额与账户不对应真实业务。截图中的原创界面与品牌素材权利归 FMLC 所有。日历中的天气与城市数据来自 [Open-Meteo](https://open-meteo.com/)。
 
 [English documentation](../English/README.md)

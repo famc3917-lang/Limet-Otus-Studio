@@ -1,6 +1,6 @@
 # Non-code assets / 非代码素材
 
-Copyright © 2026 博成 · FMLC. All rights reserved.
+Copyright © 2026 FMLC. All rights reserved.
 
 The original logos, photographs, illustrations, visual identity, marketing copy and other non-code works created for Limet Otus Studio are **not licensed under GPL-3.0-only**. No license to reuse or redistribute these assets is granted by this notice. The GPL license covers project code only. Third-party assets and models remain under their respective licenses and notices.
 

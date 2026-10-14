@@ -85,7 +85,7 @@ Provided as is, without any guarantee of data protection, availability or accura
 
 **Keep your keys.** Data is encrypted, and a lost or damaged master key means the data cannot be recovered by anyone, the developers included. Read [NOTICE-KEYS.md](NOTICE-KEYS.md) before use.
 
-Copyright © 2026 博成 · FMLC.
+Copyright © 2026 FMLC.
 
 ---
 
@@ -162,4 +162,4 @@ npm run dev
 
 **保管好密钥。** 数据加密保存，主密钥一旦丢失或损坏，任何人都无法恢复数据，包括开发者。使用前请阅读[密钥与数据恢复声明](NOTICE-KEYS.md)。
 
-Copyright © 2026 博成 · FMLC.
+Copyright © 2026 FMLC.
