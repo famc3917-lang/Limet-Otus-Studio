@@ -3,6 +3,7 @@
 // Additional terms: see ADDITIONAL_TERMS.md
 'use client';
 
+import {StudioSelect} from '@/components/biz/select';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect,useState } from "react";
@@ -27,6 +28,7 @@ function RegisterInner() {
   const firstRun=mode!=='invite';
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [passphrase, setPassphrase] = useState("");
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,14 +42,15 @@ function RegisterInner() {
     const name = username.trim();
     if (!name) return setErr(t('请填写账户名','Enter an account name'));
     if (!nickname.trim()) return setErr(t('请填写网名','Enter a display name'));
-    if (password.length < 12) return setErr(t('密码至少 12 位','Use at least 12 characters for your password'));
+    if (password.length < 12 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password) || /\s/.test(password)) return setErr(t('传统密码至少 12 位，包含字母和数字，不含空格','Use at least 12 characters with letters and digits and no spaces'));
+    if ([...passphrase.normalize('NFC')].length < 6) return setErr(t('文字密码至少 6 个字，任何文字都可以','The text password needs at least 6 characters of any kind'));
     if (password !== confirm) return setErr(t('两次输入的密码不一致','Passwords do not match'));
     if (mode==='invite'&&!invitation.trim()) return setErr(t('请填写工作室邀请代码','Enter your studio invitation code'));
     if (mode==='setup-token'&&!setupToken.trim()) return setErr(t('请填写首次开通授权','Enter the initial setup token'));
 
     setBusy(true);
     let res: Awaited<ReturnType<typeof registerAccount>>;
-    try { res = await registerAccount(name, password,invitation,setupToken,nickname,realName,currency); }
+    try { res = await registerAccount(name, password,invitation,setupToken,nickname,realName,currency,passphrase); }
     catch { setBusy(false); return setErr(t('注册暂时不可用，请重试','Registration is temporarily unavailable. Please try again.')); }
     setBusy(false);
     setMode(getRegistrationMode());
@@ -87,10 +90,10 @@ function RegisterInner() {
             </Field>
             <Field label={t('网名','Display name')} required><TextInput value={nickname} maxLength={80} onChange={e=>setNickname(e.target.value)} placeholder={t('工作室内使用的名字','Name shown to your team')} autoComplete="nickname"/></Field>
             <Field label={t('真名（选填）','Legal name (optional)')}><TextInput value={realName} maxLength={80} onChange={e=>setRealName(e.target.value)} autoComplete="name"/></Field>
-            {firstRun&&<Field label={t('工作室记账币种','Studio currency')} required hint={t('订单与分成使用此币种。切换界面语言不会换算金额。','Orders and shares use this currency. Changing interface language will not convert recorded amounts.')}><select className="studio-field w-full rounded-xl px-3 py-2" value={currency} onChange={e=>setCurrency(e.target.value as StudioCurrency)}>{STUDIO_CURRENCIES.map(c=><option key={c.code} value={c.code}>{c.code} · {language==='en'?c.en:c.zh}</option>)}</select></Field>}
+            {firstRun&&<Field label={t('工作室记账币种','Studio currency')} required hint={t('订单与分成使用此币种。切换界面语言不会换算金额。','Orders and shares use this currency. Changing interface language will not convert recorded amounts.')}><StudioSelect className="studio-field w-full rounded-xl px-3 py-2" value={currency} onChange={e=>setCurrency(e.target.value as StudioCurrency)}>{STUDIO_CURRENCIES.map(c=><option key={c.code} value={c.code}>{c.code} · {language==='en'?c.en:c.zh}</option>)}</StudioSelect></Field>}
             {mode==='invite'&&<Field label={t('邀请代码','Invitation code')} required hint={t('由工作室超级管理员提供','Provided by the studio owner')}><TextInput value={invitation} onChange={e=>setInvitation(e.target.value)} autoComplete="off"/></Field>}
             {mode==='setup-token'&&<Field label={t('首次开通授权','Initial setup token')} required hint={t('由此云实例的部署负责人提供','Provided by the instance administrator')}><TextInput type="password" value={setupToken} onChange={e=>setSetupToken(e.target.value)} autoComplete="off"/></Field>}
-            <Field label={t('密码','Password')} required hint={t('12–256 位','12–256 characters')}>
+            <Field label={t('传统密码','Password')} required hint={t('12–256 位，字母和数字','12–256 letters and digits')}>
               <TextInput
                 type="password"
                 value={password}
@@ -106,6 +109,15 @@ function RegisterInner() {
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder={t('再次输入密码','Enter password again')}
                 autoComplete="new-password"
+              />
+            </Field>
+            <Field label={t('文字密码','Text password')} required hint={t('任意文字，6–200 个字：一句诗、一句话、表情都可以。登录时两个密码输入任意一个即可','Any text, 6–200 characters: a line of verse, a sentence, emoji. Either password signs you in')}>
+              <TextInput
+                type="password"
+                value={passphrase}
+                onChange={(e) => setPassphrase(e.target.value)}
+                placeholder={t('例如：春风又绿江南岸','For example: a line you will remember')}
+                autoComplete="off"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleRegister();
                 }}

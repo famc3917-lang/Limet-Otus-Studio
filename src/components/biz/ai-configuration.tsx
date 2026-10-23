@@ -2,6 +2,7 @@
 // Copyright (C) 2026 博成 · FMLC
 // Additional terms: see ADDITIONAL_TERMS.md
 'use client';
+import {StudioSelect} from '@/components/biz/select';
 import {errorText} from '@/lib/interface-error';
 import {useStudioLanguage as useInterfaceLanguage} from '@/lib/i18n';
 import {interfaceText,interfaceNotice} from '@/lib/interface-text';
@@ -64,7 +65,7 @@ export function AIConfiguration(){
  return <div className="ai-configuration" onBlur={()=>{if(loaded&&dirty)void save();}}>
   <p>{t('选择服务，模型与接入地址自动填入。','Select a service to fill in its model and endpoint.')}</p>
   <div className="api-presets" aria-label={t('AI 服务','AI services')}>{AI_PRESETS.map(p=><button type="button" key={p.name} aria-pressed={!!p.baseUrl&&providerPreset(config)?.name===p.name} onClick={()=>choosePreset(p)}>{interfaceText(p.name,language)}</button>)}</div>
-  <label>{t('协议','Protocol')}<select value={config.protocol} onChange={e=>update({...config,protocol:e.target.value as AIConfig['protocol'],configured:false})}><option value="openai">{t('OpenAI Chat Completions 兼容','OpenAI Chat Completions compatible')}</option><option value="anthropic">Anthropic Messages</option></select></label>
+  <label>{t('协议','Protocol')}<StudioSelect value={config.protocol} onChange={e=>update({...config,protocol:e.target.value as AIConfig['protocol'],configured:false})}><option value="openai">{t('OpenAI Chat Completions 兼容','OpenAI Chat Completions compatible')}</option><option value="anthropic">Anthropic Messages</option></StudioSelect></label>
   <label>{t('API 基础地址','API base URL')}<input autoComplete="off" spellCheck={false} value={config.baseUrl} placeholder="https://your-provider.example/v1" onChange={e=>update({...config,baseUrl:e.target.value})}/></label>
   <label>{t('API 密钥','API key')}<input type="password" autoComplete="off" spellCheck={false} value={config.apiKey} placeholder={config.configured?t('已配置 · 留空保留','Configured · leave blank to keep'):t('填写服务密钥','Enter the service key')} onChange={e=>update({...config,apiKey:e.target.value})}/></label>
   <label>{t('模型开发方','Model developer')}<input maxLength={100} value={config.modelDeveloper??providerPreset(config)?.developer??''} placeholder={t('自定义或代理服务请填写模型的实际开发方','For custom or proxy services, enter the actual model developer')} onChange={e=>update({...config,modelDeveloper:e.target.value})}/></label>

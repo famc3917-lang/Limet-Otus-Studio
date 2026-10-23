@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-only · Copyright (C) 2026 博成 · FMLC -->
+<html lang="zh-CN"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'">
+<title>解锁工作室</title>
+<style>
+:root{color-scheme:dark;--bg:#1c1c1e;--card:#2c2c2e;--label:#fff;--label2:rgba(235,235,245,.6);--sep:rgba(84,84,88,.6);--blue:#0a84ff;--red:#ff453a;--green:#30d158}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--label);font:13px/1.45 -apple-system,"PingFang SC","Microsoft YaHei UI","Segoe UI",sans-serif;-webkit-user-select:none;user-select:none}
+.drag{position:fixed;inset:0 0 auto 0;height:36px;-webkit-app-region:drag}
+main{height:100%;display:grid;place-items:center;padding:40px 36px 28px}
+.box{width:100%;max-width:340px;display:grid;gap:18px;text-align:center}
+.lock{width:64px;height:64px;margin:0 auto;border-radius:16px;display:grid;place-items:center;background:linear-gradient(160deg,#3a3a3c,#232325);box-shadow:0 8px 24px rgba(0,0,0,.35),inset 0 .5px 0 rgba(255,255,255,.12)}
+h1{font-size:20px;font-weight:600;margin:0;letter-spacing:-.01em}p{margin:0;color:var(--label2)}
+form{display:grid;gap:0;background:var(--card);border-radius:10px;overflow:hidden;text-align:left}
+input{all:unset;-webkit-user-select:text;user-select:text;padding:11px 14px;font-size:14px;border-bottom:.5px solid var(--sep)}input:last-of-type{border-bottom:0}input::placeholder{color:rgba(235,235,245,.3)}
+button{all:unset;cursor:pointer;text-align:center;padding:9px 0;border-radius:8px;background:var(--blue);font-weight:500;font-size:14px}button:disabled{opacity:.45;cursor:default}
+.msg{min-height:18px;color:var(--red)}.msg.ok{color:var(--green)}
+small{color:rgba(235,235,245,.3);font-size:11px;line-height:1.5}
+</style></head>
+<body><div class="drag"></div><main><div class="box">
+ <div class="lock"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+ <div><h1>工作室已加密锁定</h1><p>输入账户名和任一密码（传统密码或文字密码）</p></div>
+ <form id="f" autocomplete="off"><input id="u" placeholder="账户名" spellcheck="false" autofocus><input id="p" type="password" placeholder="传统密码或文字密码"></form>
+ <button id="go" type="button">解锁</button>
+ <div id="msg" class="msg" role="status"></div>
+ <small>主密钥只能由账户密码解开，不在这台电脑上另存。所有解锁方式都丢失时，数据无法恢复。</small>
+</div></main>
+<script src="unlock.js"></script>
+</body></html>

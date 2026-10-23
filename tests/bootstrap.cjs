@@ -17,26 +17,26 @@ async function request(route,method='GET',body,session,expected=200,extra={}){
 }
 (async()=>{try{
  let status=(await request('auth/status')).value;assert.equal(status.initialized,false);assert.equal(status.setupMode,'unavailable');
- await request('auth/bootstrap','POST',{nickname:'owner',username:'owner',password},undefined,403);
- await request('auth/register','POST',{nickname:'owner',username:'owner',password},undefined,403);
+ await request('auth/bootstrap','POST',{nickname:'owner',username:'owner',password,passphrase:'春风又绿江南岸·测试'},undefined,403);
+ await request('auth/register','POST',{nickname:'owner',username:'owner',password,passphrase:'春风又绿江南岸·测试'},undefined,403);
  process.env.STUDIO_SETUP_TOKEN='synthetic-cloud-setup-secret';
  assert.equal((await request('auth/status')).value.setupMode,'setup-token');
- await request('auth/bootstrap','POST',{nickname:'owner',username:'owner',password,setupToken:'incorrect'},undefined,403);
- await request('auth/bootstrap','POST',{username:'',password,setupToken:process.env.STUDIO_SETUP_TOKEN},undefined,400);
+ await request('auth/bootstrap','POST',{nickname:'owner',username:'owner',password,passphrase:'春风又绿江南岸·测试',setupToken:'incorrect'},undefined,403);
+ await request('auth/bootstrap','POST',{username:'',password,passphrase:'春风又绿江南岸·测试',setupToken:process.env.STUDIO_SETUP_TOKEN},undefined,400);
  assert.equal((await request('auth/status')).value.initialized,false,'invalid setup must roll back the workspace');
  process.env.STUDIO_DESKTOP='1';assert.equal((await request('auth/status')).value.setupMode,'desktop');
  const headers={'X-Studio-Bootstrap':process.env.STUDIO_SESSION_TOKEN};
- const attempts=await Promise.all(['first-A','first-B'].map(username=>request('auth/bootstrap','POST',{nickname:username,username,password},undefined,null,headers)));
+ const attempts=await Promise.all(['first-A','first-B'].map(username=>request('auth/bootstrap','POST',{nickname:username,username,password,passphrase:'春风又绿江南岸·测试'},undefined,null,headers)));
  assert.deepEqual(attempts.map(r=>r.response.status).sort(),[200,409],'only one first owner may win');
  const users=await tx(sql=>sql.all('SELECT id,username,role FROM users'));assert.equal(users.length,1);assert.equal(users[0].id,'0');assert.equal(users[0].role,'owner');
  const login=await request('auth/login','POST',{username:users[0].username,password});const owner={cookie:login.response.headers.get('set-cookie').split(';')[0],csrf:login.value.csrf};
  assert.equal(login.value.user.id,'0');assert(login.value.user.scopes.includes('members:manage'));
- await request('auth/bootstrap','POST',{nickname:'replacement',username:'replacement',password},undefined,409,headers);
- await request('auth/register','POST',{nickname:'uninvited',username:'uninvited',password,role:'owner',id:'0'},undefined,403);
+ await request('auth/bootstrap','POST',{nickname:'replacement',username:'replacement',password,passphrase:'春风又绿江南岸·测试'},undefined,409,headers);
+ await request('auth/register','POST',{nickname:'uninvited',username:'uninvited',password,passphrase:'春风又绿江南岸·测试',role:'owner',id:'0'},undefined,403);
  const invitation=(await request('invitations','POST',{role:'viewer'},owner)).value.invitation;
- const member=await request('auth/register','POST',{nickname:'invited-member',username:'invited-member',password,invitation,role:'owner',id:'0'});
+ const member=await request('auth/register','POST',{nickname:'invited-member',username:'invited-member',password,passphrase:'春风又绿江南岸·测试',invitation,role:'owner',id:'0'});
  assert.notEqual(member.value.user.id,'0');assert.equal(member.value.user.role,'viewer');
- await request('auth/register','POST',{nickname:'replay',username:'replay',password,invitation},undefined,403);
+ await request('auth/register','POST',{nickname:'replay',username:'replay',password,passphrase:'春风又绿江南岸·测试',invitation},undefined,403);
  const unchanged=await tx(sql=>sql.all('SELECT id,username,role FROM users'));assert.equal(unchanged.find(u=>u.id==='0').username,users[0].username);assert.equal(unchanged.length,2);
  await request('auth/logout','POST',{},owner);await request('auth/me','GET',undefined,owner,401);
  await request('auth/login','POST',{username:users[0].username,password});

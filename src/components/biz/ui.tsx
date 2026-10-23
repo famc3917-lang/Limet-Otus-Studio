@@ -35,6 +35,7 @@ import type { Signature } from "@/lib/types";
 import {
   Menu, Plus, LogOut,
   CalendarDays,
+  Lamp,
   Camera,
   ClipboardList,
   Image as ImageIcon,
@@ -266,6 +267,7 @@ export function Sidebar() {
     { href: '/', label: t('工作台','Dashboard'), icon: LayoutDashboard },
     { href: '/orders', label: t('订单管理','Orders'), icon: ClipboardList, count: data.orders.length },
     { href: '/schedule', label: t('拍摄日历','Shoot calendar'), icon: CalendarDays },
+    { href: '/lighting', label: t('灯光测试','Lighting lab'), icon: Lamp, badge: t('实验','Beta') },
     { href: '/pre', label: t('前期拍摄','Production'), icon: Camera, count: data.preOrders.filter(p => p.status !== 'completed').length },
     { href: '/post', label: t('后期交付','Post-production'), icon: ImageIcon, count: data.postOrders.filter(p => p.status !== 'completed').length },
     { href: '/finance', label: ['owner','admin'].includes(getSessionUser()?.role??'')?t('经营概览','Business overview'):t('我的经营概览','My business overview'), icon: Wallet },
@@ -277,7 +279,7 @@ export function Sidebar() {
     <Link href="/" className="studio-brand"><span className="brand-mark"><BrandMark/></span><span><strong>{t('观隅','Limet Otus')}</strong><small>Limet Otus Studio</small></span></Link>
     {getSessionUser()?.scopes.includes('orders:write')&&<Link href="/orders/new" className="nav-primary"><Plus size={16} /> {t('新建拍摄订单','New shoot order')}</Link>}
     <span className="eyebrow nav-label">{t('工作空间','Workspace')}</span>
-    <nav aria-label={t('工作室导航','Studio navigation')} className="flex-1 overflow-y-auto">{menu.filter(m=>!getSessionUser()||(m.href==='/admin'?getSessionUser()?.scopes.includes('settings:write'):m.href==='/finance'?getSessionUser()?.scopes.includes('finance:read'):true)).map(m => <Link key={m.href} href={m.href} className="nav-item" aria-current={(m.href === '/' ? pathname === '/' : pathname.startsWith(m.href)) ? 'page' : undefined}><m.icon size={18} strokeWidth={1.6} /><span>{m.label}</span>{m.count !== undefined && m.count > 0 && <span className="nav-count">{m.count}</span>}</Link>)}</nav>
+    <nav aria-label={t('工作室导航','Studio navigation')} className="flex-1 overflow-y-auto">{menu.filter(m=>!getSessionUser()||(m.href==='/admin'?getSessionUser()?.scopes.includes('settings:write'):m.href==='/finance'?getSessionUser()?.scopes.includes('finance:read'):true)).map(m => <Link key={m.href} href={m.href} className="nav-item" aria-current={(m.href === '/' ? pathname === '/' : pathname.startsWith(m.href)) ? 'page' : undefined}><m.icon size={18} strokeWidth={1.6} /><span>{m.label}</span>{m.count !== undefined && m.count > 0 && <span className="nav-count">{m.count}</span>}{'badge' in m && m.badge && <span className="nav-experimental">{m.badge}</span>}</Link>)}</nav>
     <div className="sidebar-bottom"><p className="mb-3">{currentUser || t('欢迎来到观隅','Welcome to Limet Otus')}{getSessionUser()&&<small className="block mt-1 opacity-60">{(language==='en'?ROLE_LABELS_EN:ROLE_LABELS)[getSessionUser()!.role]}</small>}</p>{currentUser ? <button type="button" className="flex items-center gap-2" onClick={() => { void requestLeave().then(ok=>ok?logout().then(()=>router.push('/login')):undefined).catch(e=>void notifyUser(errorText(e))); }}><LogOut size={13} />{t('退出登录','Sign out')}</button> : <Link href="/login">{t('登录 / 注册','Sign in / Register')}</Link>}<p className="mt-5 text-[9px] tracking-widest">{t('为创作留出空间。','Room for creation.')}</p></div>
   </aside>;
 }

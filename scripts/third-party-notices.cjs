@@ -6,7 +6,7 @@
 // Next's standalone trace drops LICENSE files, so texts come from the full node_modules trees.
 const fs=require('fs'),path=require('path');
 const root=path.resolve(__dirname,'..');
-const build=process.env.STUDIO_BUILD_DIR||'.next-package-3.0.0';
+const build=process.env.STUDIO_BUILD_DIR||'.next-package-'+require('../package.json').version;
 const shipped=[path.join(root,build,'standalone/node_modules'),path.join(root,'speech/node_modules')];
 const sources=[path.join(root,'node_modules'),path.join(root,'speech/node_modules')];
 const output=path.join(root,'third-party/notices/npm/THIRD-PARTY-NOTICES.txt');

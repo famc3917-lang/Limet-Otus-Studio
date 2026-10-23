@@ -27,6 +27,15 @@ export const FIXES:Record<string,readonly [zh:string,en:string]>={
 };
 
 export const ERROR_CATALOG:readonly ErrorEntry[]=[
+ ['灯光参数无效','Invalid lighting specifications','settings','灯光设备的测光参数超出合理范围，或灯光类型不对。','A light’s photometric values are out of range or its type is invalid.','@input'],
+ ['这不是观隅布光单','This is not a Limet lighting sheet','settings','选择的文件不是从灯光测试导出的布光单。','The chosen file was not exported from the lighting lab.','选择以“观隅布光单”开头的文本文件。','Choose a text file that begins with the lighting sheet header.'],
+ ['没有找到人物模型文件','No subject model found','settings','所选文件夹里没有 GLB、glTF 或 FBX 模型。','The chosen folder has no GLB, glTF or FBX model.','选择包含模型文件的文件夹。','Choose the folder that contains the model file.'],
+ ['模型里没有可显示的网格','The model has no visible meshes','settings','模型文件里没有可以显示的几何体。','The model file has no geometry that can be shown.','在建模软件中检查后重新导出。','Check the model in your 3D software and export it again.'],
+ ['传统密码须为 12–256 位，包含字母和数字，可含符号，不含空格','The password must be 12–256 characters with letters and digits, no spaces','account','传统密码太短、缺少字母或数字，或含有空格。','The password is too short, lacks a letter or a digit, or contains spaces.','设置 12 位以上、同时包含字母和数字的密码。','Choose at least 12 characters including letters and digits.'],
+ ['文字密码须为 6–200 个字符，可以是任意文字，不能含控制字符','The text password must be 6–200 characters of any text, without control characters','account','文字密码太短、太长，或含有不可见的控制字符。','The text password is too short or too long, or contains invisible control characters.','用一句 6 个字以上、好记的话，例如一句诗。','Use a memorable line of six or more characters, such as a line of verse.'],
+ ['请填写新的传统密码或文字密码','Enter a new password or text password','account','修改密码时两项都没有填写。','Neither new password was filled in.','至少填写其中一项。','Fill in at least one of them.'],
+ ['请设置文字密码','Set a text password','account','这个账户还没有文字密码。','This account has no text password yet.','填写一个文字密码后再保存。','Fill in a text password and save again.'],
+ ['账户记录校验失败：这个账户的资料被本软件之外的程序改动过，已拒绝登录','Account check failed: this account was changed outside the app, so sign-in is refused','account','账户的密码、角色或状态被本软件之外的程序直接改动过，与账户封印不符。','The account’s password, role or status was edited by another program and no longer matches its seal.','用另一位所有者账户登录后重新设置该成员，或从备份恢复；不要用其他工具直接修改数据库。','Sign in as another owner to reset this member, or restore from a backup; never edit the database with other tools.'],
  // —— Desktop ——
  ['不受信任的调用来源','Untrusted caller','desktop','桌面窗口之间的调用不是来自本软件自己的窗口。','A desktop call did not come from one of the app\'s own windows.','@report'],
  ['仅主窗口可初始化工作室','Only the main window can set up the studio','desktop','首次开通请求来自悬浮球等辅助窗口。','A setup request came from a secondary window such as the floating orb.','在主窗口中创建工作室。','Create the studio from the main window.'],
@@ -172,6 +181,7 @@ export const ERROR_CATALOG:readonly ErrorEntry[]=[
  ['工作室偏好格式无效','Invalid studio preferences','settings','备份或请求中的偏好字段不完整，或币种不受支持。','Preference fields in the backup or request are incomplete, or the currency is unsupported.','@input'],
  ['打印模板格式无效','Invalid print template','settings','打印模板缺少必需字段或数值超出范围。','The print template is missing fields or has out-of-range values.','在打印模板页选择“恢复原文”后重新编辑。','Use Restore original on the print template page and edit again.'],
  ['缺少或损坏的数据列表：{1}','Missing or damaged data list: {1}','settings','备份中缺少必需的数据表；{1} 为数据表名。','The backup lacks a required list; {1} is its name.','使用完整的导出文件。','Use a complete export file.'],
+ ['retiredExtraIds 格式不正确','Invalid list of removed add-ons','settings','已删除内置增项的记录不是文字编号列表，或条目过多。','The record of removed built-in add-ons is not a list of IDs, or is too long.','使用完整的导出文件。','Use a complete export file.'],
  ['{1} 中存在无效或重复记录','{1} contains invalid or duplicate records','settings','数据表中有记录缺少编号或编号重复。','Records in the list lack an ID or share an ID.','使用完整、未手动修改的导出文件。','Use a complete export file that has not been edited by hand.'],
  ['{1} 格式不正确','{1} is malformed','settings','字段格式不符合要求。','A field is malformed.','@input'],
  ['存储卡列表无效或重复','The memory card list is invalid or contains duplicates','business','前期工单中的存储卡编号重复或无效。','Memory card IDs on the shoot task are duplicated or invalid.','重新选择存储卡。','Choose the memory cards again.'],

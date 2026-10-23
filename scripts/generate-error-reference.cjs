@@ -42,7 +42,7 @@ const AREAS=[
  ['api','接口','API'],
  ['server','服务器与连接','Server and connection'],
 ];
-const cell=s=>String(s).replace(/\|/g,'\\|').replace(/\n/g,' ');
+const cell=s=>String(s).replace(/\\/g,'\\\\').replace(/\|/g,'\\|').replace(/\r?\n/g,' ');
 const code=s=>'`'+s.replace(/`/g,'\'')+'`';
 
 function render(lang){

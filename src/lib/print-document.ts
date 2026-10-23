@@ -3,6 +3,9 @@
 // Additional terms: see ADDITIONAL_TERMS.md
 import type {StudioLanguage} from './i18n';
 import {refundRangeLabel,refundRateLabel,type InstallmentStage,type RefundRule} from './payment-plan';
+import {LEGACY_PAYMENT_STATEMENTS} from './legacy-print';
+import {PAYMENT_REFUND_STATEMENT} from './print-ticket';
+import {PAYMENT_REFUND_STATEMENT_EN} from './print-language';
 export type PrintTemplate='white'|'black'|'pattern'|'contract';
 export interface StatementBlock {id:string;title:string;html:string;background:string;color:string;font:string;size:number;bold:boolean}
 export interface PrintDocument {version:1;template:PrintTemplate;font:string;size:number;background:string;color:string;padding:number;blocks:StatementBlock[];sectionOrder:string[];hiddenSections:string[];copy?:Record<string,string>}
@@ -28,10 +31,28 @@ export function refundRulesTable(rules:RefundRule[],language:StudioLanguage):str
  const en=language==='en',sorted=[...rules].sort((a,b)=>b.minDays-a.minDays);
  return tableHtml(en?['Time before shoot','Refund']:['距拍摄日','退款'],sorted.map(r=>[refundRangeLabel(sorted,r,language),refundRateLabel(r.rate,language)]));
 }
+/** First header cell of the plan and refund tables, in both languages; older templates saved these tables as fixed HTML. */
+const PLAN_HEAD=['期数','Instalment'],REFUND_HEAD=['距拍摄日','Time before shoot'];
+/**
+ * Brings templates saved by earlier versions up to date: fixed payment wording becomes the current wording with plan
+ * placeholders, and fixed plan or refund tables become placeholders, so the printed terms always follow the settings.
+ */
+export function upgradeLegacyPlan(html:string):string{
+ let out=html;
+ for(const legacy of LEGACY_PAYMENT_STATEMENTS){const old=escapeHtml(legacy.text);if(!out.includes(old))continue;const en=legacy.language==='en',tokens=PLAN_TOKENS[legacy.language];
+  const fresh=(out.includes(tokens.payment)?'':'<h3>'+(en?'Payment plan':'付款方案')+'</h3><p>'+tokens.payment+'</p>')+(out.includes(tokens.refund)?'':'<h3>'+(en?'Refund rules':'退款规则')+'</h3><p>'+tokens.refund+'</p>')+escapeHtml(en?PAYMENT_REFUND_STATEMENT_EN:PAYMENT_REFUND_STATEMENT);
+  out=out.split(old).join(fresh);}
+ if(typeof DOMParser==='undefined'||!out.includes('<table'))return out;
+ const doc=new DOMParser().parseFromString(out,'text/html');let changed=false;
+ for(const table of Array.from(doc.querySelectorAll('table'))){const head=table.querySelector('th,td')?.textContent?.trim()??'';const set=PLAN_TOKENS[/[a-z]/i.test(head)?'en':'zh'];
+  const token=PLAN_HEAD.includes(head)?set.payment:REFUND_HEAD.includes(head)?set.refund:null;if(!token)continue;
+  const p=doc.createElement('p');p.textContent=token;table.replaceWith(p);changed=true;}
+ return changed?doc.body.innerHTML:out;
+}
 /** Replaces plan placeholders (in either language) with tables; the HTML must already be sanitised. */
 export function renderPlanTokens(html:string,plan:InstallmentStage[],rules:RefundRule[],language:StudioLanguage):string{
  const swap=(source:string,token:string,table:string)=>source.split('<p>'+token+'</p>').join(table).split(token).join(table);
- let out=html;
+ let out=upgradeLegacyPlan(html);
  for(const set of Object.values(PLAN_TOKENS)){out=swap(out,set.payment,paymentPlanTable(plan,language));out=swap(out,set.refund,refundRulesTable(rules,language));}
  return out;
 }

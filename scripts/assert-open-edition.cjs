@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path');
 const ts=require('typescript');
 const root=path.resolve(process.argv[2]||path.join(__dirname,'..'));
 let edition;try{edition=JSON.parse(fs.readFileSync(path.join(root,'edition.json'),'utf8'));}catch{throw Error('edition.json is missing. Refusing to export this source tree.');}
-if(edition.edition!=='open-source'||edition.version!=='3.0.0')throw Error('edition.json does not match this V3.0.0 source tree.');
+if(edition.edition!=='open-source'||edition.version!==require('../package.json').version)throw Error('edition.json does not match this source tree.');
 const problems=[];
 const forbidden=new Set(['phone','wechat','mobile','socialaccount','social_account']);
 function name(node){if(!node)return '';if(ts.isIdentifier(node)||ts.isStringLiteralLike(node))return node.text.toLowerCase();if(ts.isComputedPropertyName(node))return name(node.expression);return '';}

@@ -56,7 +56,8 @@ function mergeAppData(base: AppData, saved: Partial<AppData>): AppData {
   const mergeExtras = (): ExtraItem[] => {
     const savedItems = saved.extraItems ?? base.extraItems ?? [];
     const savedIds = new Set(savedItems.map((e) => e.id));
-    const seedBuiltins = (base.extraItems ?? []).filter((e) => e.builtin && !savedIds.has(e.id));
+    const retired = new Set(saved.retiredExtraIds ?? []);
+    const seedBuiltins = (base.extraItems ?? []).filter((e) => e.builtin && !savedIds.has(e.id) && !retired.has(e.id));
     return [...savedItems, ...seedBuiltins];
   };
   return {
@@ -368,6 +369,8 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
       patchData((d) => ({
         ...d,
         extraItems: items,
+        /* built-in add-ons the studio deletes stay deleted; re-adding one with the same id brings it back */
+        retiredExtraIds: [...new Set([...(d.retiredExtraIds ?? []), ...(d.extraItems ?? []).filter((e) => e.builtin && !items.some((x) => x.id === e.id)).map((e) => e.id)])].filter((id) => !items.some((x) => x.id === id)),
         logs: appendLog(d.logs, {
           at: new Date().toISOString(),
           action: '更新附加项目配置',

@@ -8,6 +8,7 @@ import {handleAPI} from '../src/server/http';
 import {financeAPI} from '../src/server/team-finance';
 import {database,tx} from '../src/server/database';
 import {seal,unseal,passwordHash,digest} from '../src/server/crypto';
+import {resealUser} from '../src/server/security';
 import {readRawState,writeRawState,saveState} from '../src/server/repository';
 import {readModule,writeModule} from '../src/server/modules';
 import {retentionAPI,beginCleanup,runRetentionSweep} from '../src/server/retention';
@@ -20,7 +21,7 @@ import {buildSeedData} from '../src/lib/seed';
 import {orderDraft} from '../src/lib/business';
 import {ROLE_SCOPES} from '../src/lib/permissions';
 import type {ExtensionRequest} from '../src/lib/retention';
-const home=process.env.STUDIO_DATA_DIR!,workspaceId='synthetic-workspace',password='Synthetic-retention-password';
+const home=process.env.STUDIO_DATA_DIR!,workspaceId='synthetic-workspace',password='Synthetic-retention-password-2026';
 const p={id:'owner',workspaceId,username:'owner',role:'owner' as const,scopes:ROLE_SCOPES.owner},member={id:'member',workspaceId,username:'member',role:'photographer' as const,scopes:ROLE_SCOPES.photographer},admin={...member,role:'admin' as const,scopes:ROLE_SCOPES.admin};
 type View={revision:number;canApprove:boolean;requests:ExtensionRequest[];items:Array<{orderId:string;notice:boolean}>};
 async function failure(fn:()=>Promise<unknown>,status:number){await assert.rejects(fn,e=>(e as {status:number}).status===status);}
@@ -30,7 +31,7 @@ async function main(){
  const seed=buildSeedData(),draft=orderDraft(seed,{customerName:'需要删除的客户',customerTypeId:seed.customerTypes[0].id,shootTime:'2026-01-01T10:00',gender:'female',adult:'adult',note:'private customer note'}),old=new Date(Date.now()-180*86400000).toISOString();
  const order={...draft,id:'order-a',orderNo:'order-a',signatureMemberId:member.id,totalPrice:1234.56,stage:'done' as const,flow:'delivered' as const,deliveredAt:old,doneAt:old,createdAt:old,seals:[]};const other={...order,id:'order-b',orderNo:'order-b',deliveredAt:new Date().toISOString(),doneAt:new Date().toISOString()};const extend={...order,id:'order-extension',orderNo:'order-extension'};seed.orders.push(order,other,extend);const finance={entries:[{id:'cash-a',orderId:order.id,orderNo:order.orderNo,kind:'receipt',cents:123456,memberId:member.id,at:old,note:'private restored cash note'}],rules:{},snapshots:[]};
  for(const id of ['order-a','order-b'])for(const target of [proof(id),backupProof(id)]){await fs.mkdir(path.dirname(target),{recursive:true});await fs.writeFile(target,bytes);}await fs.mkdir(path.join(home,'git-backup','.git'),{recursive:true});
- await tx(async sql=>{await sql.run('INSERT INTO workspaces(id,name,created_at) VALUES(?,?,?)',[workspaceId,'Synthetic',old]);for(const actor of [p,member])await sql.run('INSERT INTO users(id,workspace_id,username,password_hash,role,created_at) VALUES(?,?,?,?,?,?)',[actor.id,workspaceId,actor.username,await passwordHash(password),actor.role,old]);await writeRawState(sql,p,{revision:1,data:seed});await writeModule(sql,p,'finance',{revision:1,data:finance});for(const [id,owner,result] of [['matching',workspaceId,order],['unrelated',workspaceId,other],['other-workspace','different-workspace',order]] as const)await sql.run('INSERT INTO idempotency(id,body,expires_at) VALUES(?,?,?)',[id,seal({workspaceId:owner,request:'hash',result},'request:'+id),'2099-01-01T00:00:00.000Z']);});
+ await tx(async sql=>{await sql.run('INSERT INTO workspaces(id,name,created_at) VALUES(?,?,?)',[workspaceId,'Synthetic',old]);for(const actor of [p,member])await sql.run('INSERT INTO users(id,workspace_id,username,password_hash,role,created_at) VALUES(?,?,?,?,?,?)',[actor.id,workspaceId,actor.username,await passwordHash(password),actor.role,old]);for(const actor of [p,member])await resealUser(sql,actor.id);await writeRawState(sql,p,{revision:1,data:seed});await writeModule(sql,p,'finance',{revision:1,data:finance});for(const [id,owner,result] of [['matching',workspaceId,order],['unrelated',workspaceId,other],['other-workspace','different-workspace',order]] as const)await sql.run('INSERT INTO idempotency(id,body,expires_at) VALUES(?,?,?)',[id,seal({workspaceId:owner,request:'hash',result},'request:'+id),'2099-01-01T00:00:00.000Z']);});
  const window=retentionWindow(order,DEFAULT_POLICY)!;assert.ok(window.autoDue);assert.equal(retentionWindow({...order,deliveredAt:undefined},DEFAULT_POLICY),null);console.log('PASS calendar months, leap years and delivery-based retention');
  let view=await retentionAPI(member,'GET') as View;assert.equal(view.canApprove,false);const until=new Date(Date.now()+120*86400000).toISOString();view=await retentionAPI(member,'POST',{action:'request',orderId:extend.id,revision:view.revision,until,reason:'客户需要继续选片'}) as View;const request=view.requests[0];
  await failure(()=>retentionAPI(member,'POST',{action:'request',orderId:order.id,revision:view.revision,until:'2028-02-30T00:00:00.000Z',reason:'无效日历日期'}),400);

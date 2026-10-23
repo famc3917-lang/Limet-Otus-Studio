@@ -8,6 +8,7 @@ import "./atelier.css";
 import "./upgrade.css";
 import "./v240.css";
 import "./v300.css";
+import "./lighting.css";
 
 import {UIEffects} from '@/components/biz/ui-effects';
 import {AuthRoot} from "@/components/biz/auth-root";

@@ -20,17 +20,17 @@ async function failure(fn:()=>Promise<unknown>,status:number){await assert.rejec
 type FinanceView={revision:number;data:FinanceState;accounts:Array<{id:string;handledOrders:number}>;result?:ShareResult};
 async function main(){
  assert.throws(()=>parseMemberProfile({nickname:''}));assert.throws(()=>parseMemberProfile({nickname:'测试',realName:[]}));
- await failure(()=>bootstrap(request,{username:'owner',password:'Synthetic-test-password',setupToken:'synthetic-setup'}),400);
+ await failure(()=>bootstrap(request,{passphrase:'春风又绿江南岸·测试',username:'owner',password:'Synthetic-test-password-2026',setupToken:'synthetic-setup'}),400);
  assert.equal(await tx(sql=>sql.one('SELECT id FROM workspaces LIMIT 1')),undefined);
- await bootstrap(request,{username:'owner',nickname:'负责人网名',realName:'可选真名',password:'Synthetic-test-password',setupToken:'synthetic-setup'});
+ await bootstrap(request,{passphrase:'春风又绿江南岸·测试',username:'owner',nickname:'负责人网名',realName:'可选真名',password:'Synthetic-test-password-2026',setupToken:'synthetic-setup'});
  const workspace=(await tx(sql=>sql.one<{id:string}>('SELECT id FROM workspaces LIMIT 1')))!;
  const p:Principal={id:'0',workspaceId:workspace.id,username:'owner',role:'owner',scopes:ROLE_SCOPES.owner};
  const invite='synthetic-one-use-invitation';await tx(sql=>sql.run('INSERT INTO invitations(hash,workspace_id,role,expires_at) VALUES(?,?,?,?)',[digest(invite),p.workspaceId,'photographer','2099-01-01T00:00:00.000Z']));
- await failure(()=>authRegister(request,{username:'member',nickname:'',password:'Synthetic-member-password',invitation:invite}),400);
- const response=await authRegister(request,{username:'member',nickname:'摄影师网名',password:'Synthetic-member-password',invitation:invite}),registered=await response.json() as {user:Principal};
+ await failure(()=>authRegister(request,{passphrase:'春风又绿江南岸·测试',username:'member',nickname:'',password:'Synthetic-member-password-2026',invitation:invite}),400);
+ const response=await authRegister(request,{passphrase:'春风又绿江南岸·测试',username:'member',nickname:'摄影师网名',password:'Synthetic-member-password-2026',invitation:invite}),registered=await response.json() as {user:Principal};
  assert.equal(registered.user.nickname,'摄影师网名');assert.equal((await teamProfile(registered.user)).profile.realName,'');
  const cookie=response.headers.get('set-cookie')!.split(';')[0],session=await authenticate(new Request('http://localhost/api/v1/auth/me',{headers:{Cookie:cookie}}));assert.equal(session.nickname,'摄影师网名');
- await failure(()=>authRegister(request,{username:'member2',nickname:'第二人',password:'Synthetic-member-password',invitation:invite}),403);
+ await failure(()=>authRegister(request,{passphrase:'春风又绿江南岸·测试',username:'member2',nickname:'第二人',password:'Synthetic-member-password-2026',invitation:invite}),403);
  const member=registered.user,alias=(await tx(sql=>memberDirectory(sql,p))).find(m=>m.id===member.id);assert.ok(alias);assert.ok(!('realName' in alias));assert.ok(!('phone' in alias));
  await failure(()=>teamProfile({...p,apiKeyId:'key'}),403);
  console.log('PASS required nickname, optional real name, transactional first-run, single-use invitations and session display');

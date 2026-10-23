@@ -15,6 +15,5 @@ lightning==2.2.4
 matplotlib==3.7.5
 onnxruntime==1.18.1
 psutil==6.1.1
-pyarrow==18.1.0
 gdown==5.2.0
 wget==3.2

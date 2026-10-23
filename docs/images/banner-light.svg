@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-labelledby="title desc">
   <title id="title">Limet Otus Studio · 观隅鸮馆</title>
-  <desc id="desc">Business workspace for individual photographers and very small studios. Version 3.0.0.</desc>
+  <desc id="desc">Business workspace for individual photographers and very small studios. Version 3.1.1.</desc>
   <style>
     .sans { font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif; }
     .ink { fill: #111111; }
@@ -10,7 +10,7 @@
   <rect width="1280" height="440" fill="#F4F2EE"/>
   <!-- grid: margin 64, columns at 64 / 352 / 640 / 928 -->
   <rect x="1152" y="56" width="64" height="64" class="red"/>
-  <text x="64" y="80" class="sans mute" font-size="15" letter-spacing="3">LIMET OTUS — 3.0.0</text>
+  <text x="64" y="80" class="sans mute" font-size="15" letter-spacing="3">LIMET OTUS — 3.1.1</text>
   <text x="64" y="196" class="sans ink" font-size="112" font-weight="700" letter-spacing="-4">Limet Otus</text>
   <text x="64" y="300" class="sans ink" font-size="112" font-weight="700" letter-spacing="-4">Studio</text>
   <text x="640" y="250" class="sans ink" font-size="40" font-weight="700">观隅鸮馆</text>

@@ -28,7 +28,7 @@ assert.throws(()=>cli.cliCanonicalTokens('View "broken','Orders'),/引号未闭�
   return {response,text,value:response.headers.get('content-type')?.includes('application/json')?JSON.parse(text):null};
  }
  try{
-  await call('auth/bootstrap',{nickname:'Synthetic CLI owner',username:'cli-owner',password:'Synthetic-CLI-only-2026!',setupToken:process.env.STUDIO_SETUP_TOKEN});
+  await call('auth/bootstrap',{nickname:'Synthetic CLI owner',username:'cli-owner',passphrase:'春风又绿江南岸·测试',password:'Synthetic-CLI-only-2026!',setupToken:process.env.STUDIO_SETUP_TOKEN});
   const login=await call('auth/login',{username:'cli-owner',password:'Synthetic-CLI-only-2026!'});
   session={cookie:login.response.headers.get('set-cookie').split(';')[0],csrf:login.value.csrf};
   const catalog=(await call('cli',{action:'catalog',language:'en'})).value;
@@ -73,7 +73,7 @@ assert.throws(()=>cli.cliCanonicalTokens('View "broken','Orders'),/引号未闭�
   const manual=await call('cli/manual?language=en',undefined,200,'GET');assert(manual.text.includes('<html lang="en">'));assert(manual.text.includes('Set Mode Team'));
   const download=await call('cli/manual?language=en&download=1',undefined,200,'GET');assert(download.response.headers.get('content-disposition').includes('-en.md'));assert(download.text.includes('# Limet Otus Studio'));
   const invitation=(await call('invitations',{role:'photographer'})).value.invitation;
-  const member=await call('auth/register',{nickname:'Synthetic CLI member',username:'cli-member',password:'Synthetic-CLI-only-2026!',invitation});
+  const member=await call('auth/register',{nickname:'Synthetic CLI member',username:'cli-member',passphrase:'春风又绿江南岸·测试',password:'Synthetic-CLI-only-2026!',invitation});
   const ordinary={cookie:member.response.headers.get('set-cookie').split(';')[0],csrf:member.value.csrf};
   await call('cli',{language:'en',text:'Help'},403,'POST',ordinary);
   await call('cli/manual?language=en',undefined,403,'GET',ordinary);

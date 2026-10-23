@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 博成 · FMLC
 # Additional terms: see ADDITIONAL_TERMS.md
-param([string]$OutputDirectory="release-v3.0.0")
+param([string]$OutputDirectory="release-v3.1.1")
 $ErrorActionPreference='Stop'
 $projectRoot=[IO.Path]::GetFullPath((Split-Path $PSScriptRoot -Parent))
 node (Join-Path $projectRoot 'scripts/assert-open-edition.cjs')

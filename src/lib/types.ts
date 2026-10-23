@@ -91,6 +91,8 @@ export interface Equipment {
   /** 是否为 SD/内存卡（前期工单选卡用） */
   isSdCard?: boolean;
   builtin?: boolean;
+  /** 灯光的测光参数（灯光测试使用） */
+  light?: import('./lighting').LightSpec;
 }
 
 /** 时间戳钢印：任何创建/状态变更同时固定工作室时区与 UTC 两个时间，只读不可篡改 */
@@ -348,6 +350,8 @@ export interface AppData {
   shootStyles: ShootStyle[];
   /** 其他/增项服务库（后台「其他」Tab 维护） */
   extraItems?: ExtraItem[];
+  /** 已删除的内置增项 id：合并数据时不再补回 */
+  retiredExtraIds?: string[];
   /** 后台操作日志（前台不展示） */
   logs?: LogEntry[];
 }

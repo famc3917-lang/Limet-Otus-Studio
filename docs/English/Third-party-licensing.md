@@ -1,6 +1,6 @@
 # Third-party licensing and distribution materials
 
-Version: V3.0.0.
+Version: V3.1.1.
 
 AI assistance was used in the development of this software.
 
@@ -29,6 +29,8 @@ Speech models are not shipped with the installer; users download them from withi
 | Component | Purpose | Licence | Licence text |
 | --- | --- | --- | --- |
 | sherpa-onnx-node 1.13.8 | Speech-recognition runtime | Apache-2.0 | Shipped with the npm package |
+| three.js 0.180.0 | 3D rendering for the lighting lab | MIT | Shipped with the npm package |
+| Rapier (@dimforge/rapier3d-compat 0.17.3) | Physics for the lighting lab | Apache-2.0 | Shipped with the npm package |
 | SenseVoiceSmall INT8 | Speech-recognition model | FunASR Model Open Source License 1.1 | `speech/FunASR-MODEL-LICENSE.txt` |
 | CosyVoice (code) | Speech-synthesis engine | Apache-2.0 | `tts/vendor/CosyVoice/LICENSE` |
 | Matcha-TTS (code) | Speech-synthesis component | MIT | `tts/vendor/CosyVoice/third_party/Matcha-TTS/LICENSE` |

@@ -234,17 +234,12 @@ export default function PreOrderPage() {
                         key={e.id}
                         type="button"
                         onClick={() => toggleEquip(e.code)}
-                        className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
-                          active
-                            ? "border-amber-500 bg-amber-50"
-                            : "border-zinc-300 text-zinc-500 hover:border-zinc-400 hover:text-zinc-700"
-                        }`}
+                        className="pick-tile"
+                        aria-pressed={active}
                         title={`${e.name} · ${e.brand} · ${e.specs}`}
                       >
-                        <div className={active ? "text-amber-600" : ""}>
-                          <span className="font-mono text-xs">{e.code}</span>
-                        </div>
-                        <div className="mt-0.5 text-xs text-zinc-500">{e.name}</div>
+                        <span className="pick-tile-box" aria-hidden="true">{active ? "✓" : ""}</span>
+                        <span className="pick-tile-text"><span className="pick-tile-code">{e.code}</span><span className="pick-tile-name">{e.name}</span></span>
                       </button>
                     );
                   })}
@@ -267,19 +262,12 @@ export default function PreOrderPage() {
                         setSdCardCodes(next);
                         updatePreOrder(pre.id, { sdCardCodes: next, sdCardCode: next[0] });
                       }}
-                      className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
-                        active
-                          ? "border-emerald-500 bg-emerald-50"
-                          : "border-zinc-300 text-zinc-500 hover:border-zinc-400 hover:text-zinc-700"
-                      }`}
+                      className="pick-tile"
                       aria-pressed={active}
                       title={`${e.name} · ${e.specs}`}
                     >
-                      <div className={active ? "text-emerald-600" : ""}>
-                        <span className="font-mono text-xs">{e.code}</span>
-                        {active && <span className="ml-1.5">✓</span>}
-                      </div>
-                      <div className="mt-0.5 text-xs text-zinc-500">{e.name}</div>
+                      <span className="pick-tile-box" aria-hidden="true">{active ? "✓" : ""}</span>
+                      <span className="pick-tile-text"><span className="pick-tile-code">{e.code}</span><span className="pick-tile-name">{e.name}</span></span>
                     </button>
                   );
                 })}

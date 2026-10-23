@@ -1,6 +1,6 @@
 # Limet Otus Studio — CLI syntax manual
 
-Version: V3.0.0.
+Version: V3.1.1.
 
 AI assistance was used in the development of this software.
 

@@ -59,3 +59,37 @@ html.assistant-orb-window,html.assistant-orb-window body{width:100vw!important;h
 .auth-heading>.studio-language-select{position:absolute;top:14px;right:16px;gap:.5rem;font-size:.75rem;color:var(--muted,#a9b8ac)}
 .auth-heading>.studio-language-select select{min-width:7.5rem;padding:.35rem 1.7rem .35rem .65rem;border-radius:.6rem;font-size:.8rem}
 @media (max-width:480px){.auth-heading>.studio-language-select>span{display:none}}
+
+/* lists read clearly in both themes: a raised panel distinct from the card, a solid highlight for the chosen item, a
+   tinted row under the pointer; native selects (rich-text toolbar) get the same colours */
+.select-options{background:var(--glass-solid);border:1px solid var(--edge);box-shadow:0 18px 48px rgba(0,0,0,.28)}
+html[data-theme=light] .select-options{background:#fff;border-color:rgba(60,60,67,.36);box-shadow:0 14px 40px rgba(0,0,0,.16)}
+html[data-theme=dark] .select-options{background:#2a3631}
+.select-options [role=option]{color:var(--foreground);font-size:13px;opacity:1}
+.select-options [data-focused=true]{background:rgba(120,120,128,.24)}
+.select-options [aria-selected=true]{background:var(--accent);color:#fff;font-weight:600}
+.select-options [aria-selected=true] svg{color:#fff}
+.select-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select:not(.select-value){color:var(--foreground);background-color:var(--glass-solid);border:1px solid var(--line)}
+select:not(.select-value) option{color:var(--foreground);background-color:var(--glass-solid)}
+html[data-theme=light] select:not(.select-value),html[data-theme=light] select:not(.select-value) option{color:#1c1c1e;background-color:#fff}
+/* selectable equipment and memory-card tiles */
+.pick-tile{display:flex;align-items:center;gap:10px;min-width:150px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--glass-solid);color:var(--foreground);text-align:left;transition:border-color .15s,background-color .15s}
+.pick-tile:hover{border-color:var(--muted)}
+.pick-tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pick-tile-box{display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--muted);font-size:13px;font-weight:700;line-height:1;color:#fff}
+.pick-tile-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.pick-tile-code{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:600}
+.pick-tile-name{font-size:12px;color:var(--muted)}
+.pick-tile[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--glass-solid))}
+.pick-tile[aria-pressed=true] .pick-tile-box{background:var(--accent);border-color:var(--accent)}
+.pick-tile[aria-pressed=true] .pick-tile-name{color:var(--foreground)}
+/* refund rules table */
+.refund-table{display:grid;gap:6px}
+.refund-row{display:grid;grid-template-columns:minmax(12rem,1fr) 11rem 17rem 4.5rem;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--glass-solid)}
+.refund-head{border:0;background:none;padding:0 10px;font-size:11px;color:var(--muted)}
+.refund-range{font-size:13px;font-weight:600}
+.refund-field{display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap}
+.refund-field small{color:var(--muted);font-size:11px;margin-left:4px}
+.refund-bad{border-color:#ff3b30}.refund-bad .refund-range{color:#ff3b30}
+@media (max-width:760px){.refund-row{grid-template-columns:1fr;gap:6px}.refund-head{display:none}}

@@ -6,6 +6,8 @@
  */
 
 'use client';
+import type { LightSpec } from '@/lib/lighting';
+import { LightFields } from '@/components/biz/light-fields';
 import {errorText} from '@/lib/interface-error';
 import {useStudioText as useInterfaceText,useStudioLanguage as useInterfaceLanguage} from '@/lib/i18n';
 import {interfaceText,interfaceNotice,logDetailText} from '@/lib/interface-text';
@@ -48,7 +50,7 @@ const TABS = [
 type TierDraft = { name: string; description: string; price: string; returnCount: string; returnDays: string };
 type EquipDraft = {
   code: string; name: string; brand: string; category: string;
-  stockInDate: string; specs: string; isSdCard: boolean;
+  stockInDate: string; specs: string; isSdCard: boolean; light?: LightSpec;
 };
 type ExtraDraft = { name: string; price: string; advanceDays: string; perUnit: boolean; unitName: string; note: string };
 
@@ -128,6 +130,7 @@ function EquipFields({ v, onChange, items }: { v: EquipDraft; onChange: (x: Equi
           onChange={(e) => onChange({ ...v, isSdCard: e.target.checked })}
           className="h-4 w-4 accent-amber-500"
         />{uiText("存储卡（前期工单可选用）","Memory card (available on shoot tasks)")}</label>
+      {v.category === '灯光' && <LightFields value={v.light} onChange={(light) => onChange({ ...v, light })} />}
     </div>
   );
 }
@@ -567,6 +570,7 @@ function EquipmentsTab() {
     stockInDate: e.stockInDate,
     specs: e.specs,
     isSdCard: e.isSdCard ?? false,
+    light: e.light,
   });
 
   const startEdit = (e: Equipment) => {
@@ -593,6 +597,7 @@ function EquipmentsTab() {
               stockInDate: editDraft.stockInDate,
               specs: editDraft.specs.trim(),
               isSdCard: editDraft.isSdCard,
+              light: editDraft.category === '灯光' ? editDraft.light : undefined,
             }
           : e,
       ),
@@ -613,6 +618,7 @@ function EquipmentsTab() {
       stockInDate: draft.stockInDate,
       specs: draft.specs.trim(),
       isSdCard: draft.isSdCard,
+      light: draft.category === '灯光' ? draft.light : undefined,
     };
     saveEquipments([...items, newItem]);
     setDraft(makeDraft(draft.category));

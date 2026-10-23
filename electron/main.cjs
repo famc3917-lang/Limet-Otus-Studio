@@ -187,7 +187,13 @@ if (!gotLock) {
 
   app.whenReady().then(async () => {
     require('./media-host.cjs')({session:session.defaultSession,getMain:()=>mainWindow,origin:appOrigin});
+    try{require('./security.cjs').lockDataFolder(app.getPath('userData'));}catch{}
+    /* key ring: once it holds a wrap, the master key opens only with an account password */
+    const dataDir=app.getPath('userData'),keyRing=require('./vault.cjs');let pendingLogin=null,unlockWindow=null;
+    if(keyRing.hasSlots(dataDir)){const opened=await require('./unlock-window.cjs')({dir:dataDir,icon:path.join(__dirname,'..','build','icon.png')});if(!opened){app.quit();return;}vaultKey=opened.masterKey;pendingLogin=opened.login;unlockWindow=opened;keyRing.retireLegacyKey(dataDir);}
+    else{
     try{vaultKey=require('./security.cjs').masterKey(app);}catch(e){const en=startupLanguage()==='en';dialog.showErrorBox(en?'Unable to open the encrypted studio':'无法打开加密工作室',en?'System secure storage is unavailable, so encrypted business storage cannot start. Sign in to Windows with your usual account and open the app again.':e.message);app.exit(1);return;}
+    }
     require('./hardware-host.cjs')({authorize:authorizeNative});
     require('./tts-host.cjs')({app,ipcMain,authorize:authorizeNative});
     require('./speech-host.cjs')({app,ipcMain,authorize:authorizeNative});
@@ -202,7 +208,13 @@ if (!gotLock) {
       app.quit();
       return;
     }
+    /* sign in with what unlocked the studio, so unlocking and signing in are one step */
+    if(pendingLogin){try{let cookie=null;
+      if(pendingLogin.username){const r=await fetch(appOrigin+'/api/v1/auth/login',{method:'POST',headers:{'Content-Type':'application/json',Origin:appOrigin},body:JSON.stringify({username:pendingLogin.username,password:pendingLogin.password})});cookie=(r.headers.getSetCookie?.()??[]).map(c=>/^studio_session=([^;]+)/.exec(c)?.[1]).find(Boolean)??null;}
+      if(cookie)await session.defaultSession.cookies.set({url:appOrigin,name:'studio_session',value:cookie,httpOnly:true,sameSite:'strict',expirationDate:Math.floor(Date.now()/1000)+400*86400});
+    }catch(e){console.warn('Sign-in after unlock failed:',e.message);}pendingLogin=null;}
     createWindow();
+    unlockWindow?.close();
 
     // 开源说明保留在应用内的关于页面，不再阻断每次启动。
 

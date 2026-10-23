@@ -3,6 +3,7 @@
 // Additional terms: see ADDITIONAL_TERMS.md
 import type { AppData, Order, PostOrder, PreOrder, TimeSeal } from './types';
 import {isPrintDocument} from './print-document';
+import {validLightSpec} from './lighting';
 import {rejectContactFields} from './public-data-guard';
 import {planOf,validateInstallments,validateRefundRules} from './payment-plan';
 import {isTimeZone} from './settings';
@@ -56,6 +57,7 @@ export function validateData(value: unknown): asserts value is Partial<AppData> 
     }
   }
   for (const key of ['extraItems','logs']) if (data[key] !== undefined && !Array.isArray(data[key])) throw new Error(`${key} 格式不正确`);
+  if (data.retiredExtraIds !== undefined && (!Array.isArray(data.retiredExtraIds) || data.retiredExtraIds.length > 500 || data.retiredExtraIds.some(id => typeof id !== 'string' || id.length > 120))) throw new Error('retiredExtraIds 格式不正确');
   const rows = (key: string) => (data[key] ?? []) as Record<string,unknown>[];
   for (const [key,fields] of Object.entries({orders:['orderNo','customerName','shootTime','serial','serialMonth'],preOrders:['preNo','orderId','customerName','photographer'],postOrders:['postNo','orderId','customerName']})) {
     for(const row of rows(key)) {
@@ -64,6 +66,7 @@ export function validateData(value: unknown): asserts value is Partial<AppData> 
       for(const field of ['totalPrice','expense','totalShots','retouchCount','returnCount']) if(row[field] !== undefined && (typeof row[field] !== 'number' || !Number.isFinite(row[field]) || Number(row[field])<0)) throw new Error(`${key} 的金额或数量无效`);
     }
   }
+  for(const row of rows('equipments'))if(row.light!==undefined&&!validLightSpec(row.light))throw new Error('灯光参数无效');
   for(const row of rows('orders')){
     if(row.signatureMemberId!==undefined&&(typeof row.signatureMemberId!=='string'||!row.signatureMemberId||row.signatureMemberId.length>100))throw Error('署名成员编号无效');
     if(row.signatureMemberName!==undefined&&(typeof row.signatureMemberName!=='string'||row.signatureMemberName.length>80))throw Error('署名网名无效');

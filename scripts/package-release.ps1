@@ -41,7 +41,7 @@ try {
  node scripts/third-party-notices.cjs
  if($LASTEXITCODE){throw 'Third-party notices failed'}
  $config=Get-Content electron-builder.yml -Raw -Encoding UTF8
- $config=$config.Replace('.next-upgrade',$env:STUDIO_BUILD_DIR).Replace('output: release-v3.0.0','output: '+$release)
+ $config=$config.Replace('.next-upgrade',$env:STUDIO_BUILD_DIR).Replace('output: release-v3.1.1','output: '+$release)
  $configFile=Join-Path $env:STUDIO_QA_OUTPUT 'builder.yml'
  [IO.File]::WriteAllText($configFile,$config,[Text.UTF8Encoding]::new($false))
  node node_modules/electron-builder/out/cli/cli.js --config $configFile --win --dir --x64

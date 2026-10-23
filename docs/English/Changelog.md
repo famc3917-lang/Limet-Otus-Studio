@@ -4,6 +4,37 @@ AI assistance was used in the development of this software.
 
 This file records user-facing changes. The first version lists every feature; later versions list additions, improvements, fixes and removals.
 
+## V3.1.1
+
+### New
+
+- Lighting lab (experimental): estimates the incident reading at the face from the lights and positions in the equipment register, with a 3D preview of the set-up.
+  - Modifiers include standard reflectors, softboxes, octaboxes, strip boxes, umbrellas, beauty dishes, snoots, grids and deep parabolics; diffused modifiers are computed from the shape of their front.
+  - Common lighting set-ups, with each light's output solved for the camera aperture.
+  - Photo, false-colour, zebra and clipping views; the camera view adds luminance and RGB histograms and depth of field from focal length, aperture and focus distance.
+  - Lights, props and the camera position can be dragged, or moved with G and turned with R, with X / Y / Z axis locks and typed values; an axis indicator sits in the top-right corner.
+  - Import your own GLB / glTF / FBX subject; detailed models are optimised automatically so the view stays responsive.
+  - Export a lighting sheet listing each light's position, height, angle, modifier, output and reading.
+- Lights in the equipment register take a guide number, energy, illuminance at 1 m, colour temperature, beam angle and CRI, and a body style.
+- New Lighting lab algorithm notes (Chinese: docs/CN/灯光测试算法说明.md).
+- Accounts can have both a standard password and a text password; either signs in.
+- The desktop app is unlocked at start with an owner's account and password; the master key is stored encrypted under owners' passwords only.
+
+### Improved
+
+- Stronger password hashing; older hashes are upgraded at the next sign-in.
+- Account records are signed, so accounts altered directly in the database cannot sign in.
+- The desktop data folder is restricted to the current Windows user.
+- Fewer dependencies in the speech synthesis runtime.
+- Refund rules are one table: each tier shows the range of days it covers and the table re-sorts after an edit; duplicate days, a missing 0-day tier or a blank field are flagged at once.
+- List menus stand apart from the page behind them, with a solid highlight on the chosen item.
+- Equipment and memory-card tiles on a shoot task have a check box and a clear selected state.
+
+### Fixed
+
+- Notices and print templates did not follow changes to the instalment plan or refund rules; fixed percentages in templates saved earlier are now replaced by tables built from the settings.
+- A deleted built-in add-on came back after about two seconds and stayed in the print template.
+
 ## V3.0.0
 
 The first public release of Limet Otus Studio, with a Windows desktop app and a server deployment template.

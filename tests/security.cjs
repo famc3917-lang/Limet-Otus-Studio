@@ -12,8 +12,8 @@ if(require.main===module)(async()=>{
  let assertions=0;
  async function request(route,method='GET',body,session,expected=200,extra={}){const response=await handleAPI(new Request('http://localhost:38332/api/v1/'+route,{method,headers:{Origin:'http://localhost:38332',...(body?{'Content-Type':'application/json'}:{}),...(session?{Cookie:session.cookie,'X-Studio-CSRF':session.csrf}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})}));const value=await response.json();assert.equal(response.status,expected,route+': '+JSON.stringify(value));assertions++;return {value,response};}
  const ownerPassword='Test-only-password!2026';
- await request('auth/bootstrap','POST',{nickname:'qa-owner',username:'qa-owner',password:ownerPassword},undefined,403);
- await request('auth/bootstrap','POST',{nickname:'qa-owner',username:'qa-owner',password:ownerPassword,setupToken:process.env.STUDIO_SETUP_TOKEN});
+ await request('auth/bootstrap','POST',{nickname:'qa-owner',username:'qa-owner',passphrase:'春风又绿江南岸·测试',password:ownerPassword},undefined,403);
+ await request('auth/bootstrap','POST',{nickname:'qa-owner',username:'qa-owner',passphrase:'春风又绿江南岸·测试',password:ownerPassword,setupToken:process.env.STUDIO_SETUP_TOKEN});
  const login=await request('auth/login','POST',{nickname:'qa-owner',username:'qa-owner',password:ownerPassword});const owner={cookie:login.response.headers.get('set-cookie').split(';')[0],csrf:login.value.csrf};assert(login.response.headers.get('set-cookie').includes('HttpOnly'));
  const me=await request('auth/me','GET',undefined,owner);assert.equal(me.value.csrf,owner.csrf);assert(!JSON.stringify(me.value).includes('password'));
  await request('state','GET',undefined,undefined,401,{Authorization:'Bearer fixture-native-capability'});
@@ -29,8 +29,8 @@ if(require.main===module)(async()=>{
  const repeated=await request('commands','POST',{...command,revision:1},owner,200,{'Idempotency-Key':'create_qa_order_0001'});assert.equal(repeated.value.result.id,orderId);
  await request('commands','POST',{...command,revision:2},owner,409,{'Idempotency-Key':'create_qa_order_0001'});
  const invitation=(await request('invitations','POST',{role:'photographer'},owner)).value.invitation;
- const registered=await request('auth/register','POST',{nickname:'qa-photographer',username:'qa-photographer',password:ownerPassword,invitation});const member={cookie:registered.response.headers.get('set-cookie').split(';')[0],csrf:registered.value.csrf};
- await request('auth/register','POST',{nickname:'qa-replay',username:'qa-replay',password:ownerPassword,invitation},undefined,403);
+ const registered=await request('auth/register','POST',{nickname:'qa-photographer',username:'qa-photographer',passphrase:'春风又绿江南岸·测试',password:ownerPassword,invitation});const member={cookie:registered.response.headers.get('set-cookie').split(';')[0],csrf:registered.value.csrf};
+ await request('auth/register','POST',{nickname:'qa-replay',username:'qa-replay',passphrase:'春风又绿江南岸·测试',password:ownerPassword,invitation},undefined,403);
  await request('keys','POST',{name:'denied',scopes:['business:read']},member,403);
  const snap=(await request('state','GET',undefined,member)).value;const changed=structuredClone(snap.data);changed.orders[0].paymentStage=1;await request('state','PUT',{revision:snap.revision,data:changed},member,403);
  const edited=await request('commands','POST',{type:'orders.update',payload:{id:orderId,location:'新摄影棚'},revision:2},member);assert.equal(edited.value.revision,3);
@@ -47,6 +47,9 @@ if(require.main===module)(async()=>{
  const overlap=structuredClone(initial.data);overlap.orders[0].location='冲突地点';await request('state','PUT',{revision:initial.revision,data:overlap},owner,409);
  // Another workspace sees only its own data, even with a known order ID.
  const otherId=crypto.randomUUID(),otherUserId=crypto.randomUUID();await tx(async sql=>{await sql.run('INSERT INTO workspaces(id,name,created_at) VALUES(?,?,?)',[otherId,'fixture-B',new Date().toISOString()]);await sql.run('INSERT INTO users(id,workspace_id,username,password_hash,role,created_at) VALUES(?,?,?,?,?,?)',[otherUserId,otherId,'qa-other',await secure.passwordHash(ownerPassword),'owner',new Date().toISOString()]);});
+ /* the attack seen in practice: an account row written straight into the database, without the server's seal */
+ await request('auth/login','POST',{username:'qa-other',password:ownerPassword},null,403);
+ await tx(sql=>load(path.join(source,'server/security.ts')).resealUser(sql,otherUserId));assertions++;
  const otherLogin=await request('auth/login','POST',{nickname:'qa-other',username:'qa-other',password:ownerPassword}),other={cookie:otherLogin.response.headers.get('set-cookie').split(';')[0],csrf:otherLogin.value.csrf};const otherOrders=await request('commands','POST',{type:'orders.list',payload:{query:orderId}},other);assert.equal(otherOrders.value.result.length,0);
  await request('family/orders/'+orderId,'GET',undefined,other,404);
  const privateText='13998765432 private_wechat_canary 不得发给 AI 的客户私人备注';let outbound=[];
@@ -62,7 +65,9 @@ if(require.main===module)(async()=>{
  const challenge=(await request('hardware/challenge','POST',{cardId:card.id,action:'state'},member)).value;const signature=crypto.sign(null,Buffer.from(challenge.message),pair.privateKey).toString('base64');const proof={challengeId:challenge.challengeId,signature};const elevation=(await request('hardware/verify','POST',proof,member)).value;await request('hardware/verify','POST',proof,member,403);
  const ms=(await request('state','GET',undefined,member)).value;ms.data.settings.name='NFC 授权修改';await request('state','PUT',{revision:ms.revision,data:ms.data},member,200,{'X-Studio-Elevation':elevation.token});await request('state','PUT',{revision:ms.revision+1,data:ms.data},member,403,{'X-Studio-Elevation':elevation.token});
  // Imported legacy hash upgrades at the first successful login.
- const legacyId=crypto.randomUUID();await tx(async sql=>{await sql.run('INSERT INTO users(id,workspace_id,username,password_hash,role,created_at) VALUES(?,?,?,?,?,?)',[legacyId,login.value.user.workspaceId,'qa-legacy',await new Promise(resolve=>crypto.pbkdf2('old-pass',Buffer.alloc(16,7),210000,32,'sha256',(_,key)=>resolve('pbkdf2$210000$'+Buffer.alloc(16,7).toString('hex')+'$'+key.toString('hex')))),'viewer',new Date().toISOString()]);});await request('auth/login','POST',{nickname:'qa-legacy',username:'qa-legacy',password:'old-pass'});const migrated=await tx(sql=>sql.one('SELECT password_hash FROM users WHERE id=?',[legacyId]));assert(migrated.password_hash.startsWith('scrypt$'));
+ const legacyId=crypto.randomUUID();await tx(async sql=>{await sql.run('INSERT INTO users(id,workspace_id,username,password_hash,role,created_at) VALUES(?,?,?,?,?,?)',[legacyId,login.value.user.workspaceId,'qa-legacy',await new Promise(resolve=>crypto.pbkdf2('old-pass',Buffer.alloc(16,7),210000,32,'sha256',(_,key)=>resolve('pbkdf2$210000$'+Buffer.alloc(16,7).toString('hex')+'$'+key.toString('hex')))),'viewer',new Date().toISOString()]);await load(path.join(source,'server/security.ts')).resealUser(sql,legacyId);});await request('auth/login','POST',{nickname:'qa-legacy',username:'qa-legacy',password:'old-pass'});const migrated=await tx(sql=>sql.one('SELECT password_hash FROM users WHERE id=?',[legacyId]));assert(migrated.password_hash.startsWith('scrypt$'));
+ const forged=await secure.passwordHash('Forged-by-another-tool-2026');await tx(sql=>sql.run('UPDATE users SET password_hash=? WHERE id=?',[forged,legacyId]));await request('auth/login','POST',{username:'qa-legacy',password:'Forged-by-another-tool-2026'},null,403);
+ await tx(sql=>sql.run("UPDATE users SET role='owner' WHERE id=?",[legacyId]));await request('auth/login','POST',{username:'qa-legacy',password:'old-pass'},null,403);assertions+=2;
  const ciphertext=secure.seal({secret:'fixture'},'tenant-A');assert.throws(()=>secure.unseal(ciphertext,'tenant-B'));const pieces=ciphertext.split('.');pieces[3]='A'+pieces[3].slice(1);assert.throws(()=>secure.unseal(pieces.join('.'),'tenant-A'));
  const rows=await tx(sql=>sql.all('SELECT body FROM business_state'));assert(!JSON.stringify(rows).includes('13998765432'));assert(!JSON.stringify(rows).includes('private_wechat_canary'));
  await request('auth/logout','POST',{},owner);await request('state','GET',undefined,owner,401);

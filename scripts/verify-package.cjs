@@ -10,7 +10,7 @@ function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e
 const asar=require('@electron/asar');
 const archive=path.join(resources,'app.asar');if(!fs.existsSync(archive))throw new Error('Missing app.asar');
 const entries=asar.listPackage(archive);for(const e of entries)if(/(vault-key|\.env(?:\.|$)|api-config\.json|business-state\.json|studio-v2\.sqlite|ai-provider\.json)/i.test(e))throw new Error('Private runtime file included: '+e);
-const packageJSON=JSON.parse(asar.extractFile(archive,'package.json'));if(packageJSON.version!=='3.0.0')throw new Error('Incorrect package version');
+const packageJSON=JSON.parse(asar.extractFile(archive,'package.json'));if(packageJSON.version!==require('../package.json').version)throw new Error('Incorrect package version');
 for(const name of ['server/server.js','server/node_modules/next/package.json'])if(!fs.existsSync(path.join(resources,name)))throw new Error('Missing server resource: '+name);
 const speech=path.join(resources,'speech'),model=JSON.parse(fs.readFileSync(path.join(speech,'MODEL.json'),'utf8').replace(/^\uFEFF/,''));
 const bundledSpeech=model.files.filter(file=>fs.existsSync(path.join(speech,'models',file.name))).length;if(bundledSpeech&&bundledSpeech!==model.files.length)throw new Error('Incomplete bundled speech model');
@@ -24,7 +24,7 @@ if(fs.existsSync(path.join(tts,'.runtime')))throw Error('Development TTS environ
 const ttsModel=JSON.parse(fs.readFileSync(path.join(tts,'MODEL.json'),'utf8')),bundledVoice=ttsModel.files.filter(asset=>fs.existsSync(path.join(tts,'model',asset.name))).length;if(bundledVoice&&bundledVoice!==ttsModel.files.length)throw Error('Incomplete bundled voice model');
 if(bundledVoice)for(const asset of ttsModel.files){if(digest(path.join(tts,'model',asset.name))!==asset.sha256)throw Error('Bundled voice model integrity mismatch: '+asset.name);}
 const manifest=files(resources).filter(p=>!p.endsWith('integrity-manifest.json')).map(p=>({path:path.relative(resources,p).replaceAll('\\','/'),bytes:fs.statSync(p).size,sha256:digest(p)}));
-fs.writeFileSync(path.join(resources,'integrity-manifest.json'),JSON.stringify({product:'Limet Otus Studio',version:'3.0.0',algorithm:'SHA-256',files:manifest},null,2));
+fs.writeFileSync(path.join(resources,'integrity-manifest.json'),JSON.stringify({product:'Limet Otus Studio',version:packageJSON.version,algorithm:'SHA-256',files:manifest},null,2));
 console.log(`Verified ASAR + ${manifest.length} resource files; SHA-256 manifest written.`);
 
 }

@@ -1,4 +1,4 @@
-# Limet Otus Studio · V3.0.0 User Manual
+# Limet Otus Studio · V3.1.1 User Manual
 
 AI assistance was used in the development of this software.
 
@@ -8,9 +8,9 @@ The software is provided as is. Data security, calculation accuracy and complete
 
 ## 1. Create a studio and sign in
 
-On first launch, select Create studio, enter an account name, nickname and password, and select the interface language and studio currency. The first account has ID 0 and is the Super Administrator; no invitation is required. Later members register with invitation codes issued by the studio administrator. For server deployments, the operator supplies the initial setup details. There is no public default password.
+On first launch, select Create studio, enter an account name, nickname, a password and a text password, and select the interface language and studio currency. The first account has ID 0 and is the Super Administrator; no invitation is required. Later members register with invitation codes issued by the studio administrator. For server deployments, the operator supplies the initial setup details. There is no public default password.
 
-Passwords are case-sensitive. Check which studio you are signing in to, and sign out after using a shared computer. If sign-in fails, check the account, password and studio address before contacting the administrator.
+The password needs at least 12 characters with letters and digits and no spaces; the text password needs at least 6 characters of any kind, such as a line of poetry. Either one signs you in. Both are case-sensitive and can be changed separately under Change my password in Studio preferences; leave the one you keep blank. Check which studio you are signing in to, and sign out after using a shared computer. If sign-in fails, check the account, password and studio address before contacting the administrator.
 
 ## 2. Workspace and preferences
 
@@ -85,6 +85,8 @@ Before cleanup, restoration or upgrades, check the records you need to retain. A
 
 ## 10. Desktop business backups and troubleshooting
 
+Each time the desktop app starts it opens the unlock window: enter the owner account name and either password, then select Unlock. The master key is stored only encrypted with the owner’s passwords and is not kept elsewhere on the computer; if both passwords are lost, the data on this computer cannot be recovered.
+
 When the app shows an error, look up its wording in the [Error and message reference](Error-reference.md) for its meaning and resolution.
 
 Configure your own Git repository in Preferences, then run a backup from Data management in Business settings. Backups include order data and payment or refund evidence. Payment summaries can be uploaded separately. **Backup and restore** on the same page exports a business backup file (JSON) for moving to another computer or restoring data; it does not include member accounts or API keys.
@@ -95,7 +97,18 @@ A failed Git initialisation, staging operation or commit stops the backup. On a 
 
 If saving fails, retain the input and resolve the synchronisation notice. Do not repeatedly overwrite conflicting records. Ask the operator to inspect service logs when the server is unavailable. Do not directly edit the database or installation directory during routine use.
 
-## 11. Licensing
+## 11. Lighting lab (beta)
+
+Select Lighting lab in the side navigation. This is a beta feature: its results are estimates for planning a setup; rely on an actual meter reading.
+
+1. In the Equipment register under Business settings, enter each light with its guide number, energy or illuminance at 1 m, and its colour temperature, beam angle, colour rendering index and body shape. Missing values are estimated from similar lights.
+2. Open the lighting lab and place lights from From the register, or choose a preset under Lighting setup; the output of each light is solved for the camera aperture.
+3. Drag lights, props and the camera into place, or press G to move, R to rotate, X, Y or Z to lock an axis, or type exact values.
+4. Read Incident at the face and the lighting ratio; Set the aperture from the reading sets the camera aperture to it. Switch the view between Photo, False colour, Zebra and Clipping; the Camera view shows luminance and RGB histograms and depth-of-field blur.
+5. Use Import a subject folder to load your own GLB, glTF or FBX subject model.
+6. Export lighting sheet saves the position, height, angle, modifier, output and reading of each light; Import a sheet restores a scene; Export image saves the current view.
+
+## 12. Licensing
 
 Original code uses GPLv3. Original non-code assets and trademarks are not licensed by the code licence. Third-party components retain their respective licences. Consult LICENSE, ADDITIONAL_TERMS.md, LICENSE-ASSETS.md and the dependency inventory. The project version record determines edition boundaries and release status.
 

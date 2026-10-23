@@ -1,4 +1,4 @@
-# Limet Otus Studio V3.0.0 Documentation
+# Limet Otus Studio V3.1.1 Documentation
 
 AI assistance was used in the development of this software.
 
@@ -6,7 +6,7 @@ Limet Otus Studio is a business workspace for independent photographers and smal
 
 ## Users
 
-- [User manual](User-manual.md): creating a studio, orders through delivery, business overview, printing, AI and speech, retention, backups
+- [User manual](User-manual.md): creating a studio, orders through delivery, business overview, printing, AI and speech, retention, backups, lighting lab
 - [Interface language](Interface-language.md): Chinese and English interfaces, currency and print templates
 - [CLI syntax manual](CLI-syntax-manual.md): the super administrator command panel
 
@@ -19,6 +19,7 @@ Limet Otus Studio is a business workspace for independent photographers and smal
 - [Developer manual](Developer-manual.md): source layout, architecture, data and permissions, speech, tests and builds
 - [API reference](API-reference.md): `/api/v1` endpoints and examples; machine-readable schema in [openapi.json](../openapi.json)
 - [Error and message reference](Error-reference.md): every error and message the software can show, with HTTP status codes, meanings and resolutions
+- [Lighting lab algorithm notes](../CN/灯光测试算法说明.md) (Chinese): how readings, modifiers, colour temperature and depth of field are calculated
 - [Family integration](Family-integration.md): the read-only order reference for Limetkura and Limetan
 - [Changelog](Changelog.md)
 

@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from 'react';
 import { AGREEMENT_CONFIRMATION, PAYMENT_REFUND_STATEMENT, PRIVACY_STATEMENT } from '@/lib/print-ticket';
 import { Btn, Field, TextArea } from './ui';
 import { useStudio } from '@/lib/store';
-import { defaultPrintDocument, isPrintDocument, type PrintDocument } from '@/lib/print-document';
+import { defaultPrintDocument, isPrintDocument, type PrintDocument ,upgradeLegacyPlan} from '@/lib/print-document';
 import {PRIVACY_STATEMENT_EN,PAYMENT_REFUND_STATEMENT_EN,AGREEMENT_CONFIRMATION_EN} from '@/lib/print-language';
 import { AdvancedPrintEditor } from './print-layout-editor';
 
@@ -57,7 +57,8 @@ export function usePrintCopy(scope:string){
    const stored=JSON.parse(storedJson) as PrintDocument|null,raw={...stored?.copy};
    const valid=Object.fromEntries(Object.keys(defaults).filter(k=>typeof raw[k]==='string').map(k=>[k,raw[k]]));
    const text={...defaults,...valid};
-   next={...text,document:isPrintDocument(stored)?stored:defaultPrintDocument(text,language)};
+   /* templates from earlier versions carry fixed percentages; show and print the plan placeholders instead */
+   next={...text,document:isPrintDocument(stored)?{...stored,blocks:stored.blocks.map(b=>({...b,html:upgradeLegacyPlan(b.html)}))}:defaultPrintDocument(text,language)};
   }catch{next={...defaults,document:defaultPrintDocument(defaults,language)};}
   setState({key:storageKey,copy:next,saved:draft?.saved??'',ready:true});
  },[storageKey,storedJson,defaults,language]);

@@ -1,4 +1,4 @@
-# Limet Otus Studio V3.0.0 Deployment Manual
+# Limet Otus Studio V3.1.1 Deployment Manual
 
 AI assistance was used in the development of this software.
 
@@ -54,13 +54,14 @@ Estimated for everyday use by an individual or a very small studio; multi-user l
 
 ## 2. Desktop installation
 
-1. Choose the installer `LimetOtusStudio-Setup-3.0.0-x64.exe` or the portable `LimetOtusStudio-Portable-3.0.0-x64.exe` (no installation). The installer installs for the current user without administrator rights, by default to `%LOCALAPPDATA%\Programs\LimetOtusStudio` (changeable during setup), creates Start menu and desktop shortcuts and registers an entry under Settings › Apps for uninstalling. Administrators can install silently with `/S` and choose the folder with `/dir=path`. The files are not code-signed, so Windows may warn about an unknown publisher; check the file source and checksum before continuing.
+1. Choose the installer `LimetOtusStudio-Setup-3.1.1-x64.exe` or the portable `LimetOtusStudio-Portable-3.1.1-x64.exe` (no installation). The installer installs for the current user without administrator rights, by default to `%LOCALAPPDATA%\Programs\LimetOtusStudio` (changeable during setup), creates Start menu and desktop shortcuts and registers an entry under Settings › Apps for uninstalling. Administrators can install silently with `/S` and choose the folder with `/dir=path`. The files are not code-signed, so Windows may warn about an unknown publisher; check the file source and checksum before continuing.
 2. On first launch, create the studio: account name, display name, password (at least 12 characters), interface language and studio currency. The first account is the super administrator.
 3. For speech, select **Install speech recognition** and **Install speech** in the assistant panel. Each download comes from a pinned source and every file is verified.
 4. Data lives in `%APPDATA%\Limet Otus Studio`; uninstalling does not remove it.
-5. The master key for business data is kept in `vault-key.dpapi` in that folder, encrypted with the Windows Data Protection API (DPAPI). **It can only be unlocked on the same computer by the same Windows user.** Therefore:
-   - Copying the data folder to another computer does not make the business data readable there. To move computers, export a business backup under **Business configuration → Data management → Backup and restore** and import it on the new machine.
-   - Reinstalling Windows, recreating the Windows user, or an administrator forcing a password reset for that user can make the key impossible to unlock. Export business backups regularly and keep them elsewhere.
+5. The master key for business data is kept in `vault.json` in that folder, encrypted separately under each owner's two passwords. Each launch asks for an owner's account and either password; other members' passwords cannot unlock it. Therefore:
+   - If every owner forgets their passwords, the data cannot be read. Set up at least two owners, or regularly export a business backup under **Business configuration → Data management → Backup and restore** and keep it elsewhere.
+   - To move computers, export a business backup and import it on the new machine.
+   - The data folder is accessible only to the current Windows user.
    - Desktop Git backups are encrypted with the same master key, so they cannot be opened once the key is lost. See [NOTICE-KEYS.md](../../NOTICE-KEYS.md).
 
 The desktop app's local server listens only on `127.0.0.1`; other devices on the network cannot reach it. Use the server edition for team access.
@@ -102,7 +103,7 @@ The desktop app's local server listens only on `127.0.0.1`; other devices on the
 
 ### 3.2 Get the source
 
-Clone the repository and check out the release tag (for example `v3.0.0`), or download the source archive attached to the release, and place it in a dedicated directory such as `/opt/limet-otus-studio`:
+Clone the repository and check out the release tag (for example `v3.1.1`), or download the source archive attached to the release, and place it in a dedicated directory such as `/opt/limet-otus-studio`:
 
 ```bash
 sudo mkdir -p /opt/limet-otus-studio
@@ -130,6 +131,7 @@ Edit `cloud/.env` and fill in the three random values and your domain:
 | `STUDIO_DB_PASSWORD` | Database password; hexadecimal avoids characters that break the connection string | 48 hex characters |
 | `STUDIO_MASTER_KEY` | Master key, Base64 of 32 random bytes | 44 characters |
 | `STUDIO_SETUP_TOKEN` | One-time token for creating the first studio | 48 hex characters |
+| `STUDIO_CREDENTIAL_MIGRATION` (optional) | Set to `1` for one start to sign accounts that have no signature yet, then remove it. Accounts already signed are not affected | `1` |
 | `STUDIO_AI_ALLOWED_HOSTS` (optional) | Self-hosted AI host names allowed on private networks or HTTP, comma-separated | `llm.lan` |
 | `STUDIO_WEATHER_ALLOWED_HOSTS` (optional) | Self-hosted weather host names allowed on private networks or HTTP, comma-separated | `weather.lan` |
 

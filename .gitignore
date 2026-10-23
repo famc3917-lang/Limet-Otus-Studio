@@ -45,3 +45,6 @@ dist-api/
 
 /tts/model/
 /test-results/
+
+# TypeScript incremental cache
+*.tsbuildinfo

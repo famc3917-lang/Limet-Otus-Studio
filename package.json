@@ -1,6 +1,6 @@
 {
   "name": "studio",
-  "version": "3.0.0",
+  "version": "3.1.1",
   "private": true,
   "main": "electron/main.cjs",
   "description": "观隅 · Limet Otus Studio 摄影业务管理系统",
@@ -11,12 +11,12 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",
-    "test:security": "node tests/security.cjs",
+    "test:security": "node tests/security.cjs && node tests/credential-forge.cjs",
     "build:api": "node scripts/build-api.cjs",
     "start:api": "node dist-api/server.cjs",
     "build:desktop": "next build --webpack && node scripts/prune-speech-trace.cjs",
     "inventory": "node scripts/inventory.cjs",
-    "check": "npm run typecheck && npm run test:errors && npm run test:security && npm run test:ai && npm run test:first-run && npm run test:desktop && npm run test:speech && npm run test:assistant && npm run test:cli",
+    "check": "npm run typecheck && npm run test:errors && npm run test:security && npm run test:vault && npm run test:lighting && npm run test:ai && npm run test:first-run && npm run test:desktop && npm run test:speech && npm run test:assistant && npm run test:cli",
     "release": "powershell -NoProfile -File scripts/package-release.ps1",
     "test:desktop": "node tests/desktop.cjs && node tests/drafts.cjs",
     "test:speech": "node tests/speech.cjs",
@@ -28,9 +28,12 @@
     "test:retention": "node tests/retention.cjs",
     "test:v3-workflow": "node tests/v3-workflow.cjs",
     "test:cli": "node tests/cli-locale.cjs",
-    "test:errors": "node tests/error-catalog.cjs && node scripts/generate-error-reference.cjs --check"
+    "test:errors": "node tests/error-catalog.cjs && node scripts/generate-error-reference.cjs --check",
+    "test:vault": "node tests/vault.cjs",
+    "test:lighting": "node tests/lighting-physics.cjs"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.17.3",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "lucide-react": "^1.37.0",
@@ -38,8 +41,9 @@
     "pg": "^8.23.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "typescript": "^5",
-    "sharp": "file:./packages/image-optimizer-disabled"
+    "sharp": "file:./packages/image-optimizer-disabled",
+    "three": "^0.180.0",
+    "typescript": "^5"
   },
   "devDependencies": {
     "@electron/packager": "^20.3.0",
@@ -47,12 +51,13 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.180.0",
+    "autoprefixer": "^10.4.21",
     "electron": "^44.0.0",
     "electron-builder": "^26.15.3",
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "tailwindcss": "^3.4.17",
-    "autoprefixer": "^10.4.21",
     "typescript-eslint": "^8.46.0"
   },
   "productName": "观隅鸮馆",

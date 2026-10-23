@@ -1,4 +1,4 @@
-# Limet Otus Studio V3.0.0 Developer Manual
+# Limet Otus Studio V3.1.1 Developer Manual
 
 AI assistance was used in the development of this software.
 

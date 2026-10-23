@@ -8,7 +8,7 @@ const origin='http://127.0.0.1:38331',product=process.env.STUDIO_QA_PRODUCT_RUNT
 const mock=http.createServer((req,res)=>{setTimeout(()=>{res.writeHead(mode==='red'?401:200,{'Content-Type':'application/json'});res.end(JSON.stringify({data:[{id:'synthetic'}]}));},mode==='yellow'?3000:0);}).listen(38335,'127.0.0.1');
 app.whenReady().then(async()=>{try{
  const headers={'Content-Type':'application/json',Origin:origin,'X-Studio-Bootstrap':'studio-local-qa-fixture-token'};const call=async(route,method='GET',body)=>{const r=await fetch(origin+'/api/v1/'+route,{method,headers,body:body&&JSON.stringify(body)});const v=await r.json();if(!r.ok)throw Error(route+': '+JSON.stringify(v));return {r,v};};
- if(!(await call('auth/status')).v.initialized)await call('auth/bootstrap','POST',{nickname:'界面测试',username:'升级测试',password:'Synthetic-QA-password-2026!'});
+ if(!(await call('auth/status')).v.initialized)await call('auth/bootstrap','POST',{nickname:'界面测试',username:'升级测试',passphrase:'春风又绿江南岸·测试',password:'Synthetic-QA-password-2026!'});
  const login=await call('auth/login','POST',{username:'升级测试',password:'Synthetic-QA-password-2026!'});headers.Cookie=login.r.headers.get('set-cookie').split(';')[0];headers['X-Studio-CSRF']=login.v.csrf;
  await session.defaultSession.cookies.set({url:origin,name:'studio_session',value:headers.Cookie.split('=')[1],httpOnly:true,sameSite:'strict'});
  const provider={protocol:'openai',baseUrl:'http://127.0.0.1:38335/v1',model:'synthetic',apiKey:'synthetic'};await call('ai/provider','PUT',provider);

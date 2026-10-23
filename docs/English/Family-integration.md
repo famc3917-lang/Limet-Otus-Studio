@@ -6,7 +6,7 @@ AI assistance was used in the development of this software.
 
 | Product | Role | Status |
 | --- | --- | --- |
-| Limet Otus Studio (观隅鸮馆) | Orders, schedules, production and editing tasks, members, finances and delivery | V3.0.0 in development |
+| Limet Otus Studio (观隅鸮馆) | Orders, schedules, production and editing tasks, members, finances and delivery | V3.1.1 |
 | Limetkura (观隅蔵) | Image cataloguing, selection and batch adjustment, starting with a JPG prototype | Planned |
 | Limetan (观隅庵) | Pixel editing, layers and creative compositing | Future |
 
@@ -28,7 +28,7 @@ GET /api/v1/family/capabilities
 {
   "family": "Limet Otus",
   "product": "studio",
-  "applicationVersion": "3.0.0",
+  "applicationVersion": "3.1.1",
   "protocol": 1,
   "capabilities": ["order.reference.read"],
   "plannedProducts": ["Limetkura", "Limetan"]

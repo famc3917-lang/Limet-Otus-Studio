@@ -52,7 +52,7 @@ export function validatePermissions(p:Principal,current:AppData,next:AppData){
  if(financial.some(k=>!same(old[k],o[k])))requireScope(p,'finance:write');}
  if(current.orders.some(o=>!next.orders.some(n=>n.id===o.id)))requireScope(p,'orders:delete');
  for(const key of ['preOrders','postOrders'] as const)if(!same(current[key],next[key])){requireScope(p,'workflow:write');for(const old of current[key]){const changed=next[key].find(n=>n.id===old.id);if(changed)for(const k of ['id','orderId','createdAt'] as const)if(old[k]!==changed[k])fail('工单关联关系不能改写',403);}}
- for(const key of ['customerTypes','packageTiers','shootStyles','equipments','extraItems','settings','printDocuments'] as const)if(!same(current[key],next[key]))requireScope(p,'settings:write');
+ for(const key of ['customerTypes','packageTiers','shootStyles','equipments','extraItems','retiredExtraIds','settings','printDocuments'] as const)if(!same(current[key],next[key]))requireScope(p,'settings:write');
 }
 export async function getState(p:Principal,knownRevision?:number){requireScope(p,'business:read');if(p.apiKeyId&&!p.scopes.includes('contacts:read'))fail('全量同步接口需要 contacts:read；安全订单查询请使用 /commands',403);return tx(async sql=>{const snapshot=await read(sql,p);if(knownRevision===snapshot.revision)return {revision:knownRevision,unchanged:true};return {...snapshot,data:visibleData(p,snapshot.data)};});}
 export async function saveState(p:Principal,data:AppData,revision:number){requireScope(p,'orders:write');if(p.apiKeyId)fail('API 集成通过命令接口写入，不允许替换全量业务数据',403);rejectContactFields(data);validateData(data);return tx(async sql=>{const current=await read(sql,p);let proposed=structuredClone(data);await applyDeletionMarkers(sql,p.workspaceId,proposed);

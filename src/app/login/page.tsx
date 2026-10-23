@@ -66,12 +66,12 @@ function LoginInner() {
                 autoComplete="username"
               />
             </Field>
-            <Field label={t('密码','Password')} required>
+            <Field label={t('密码','Password')} required hint={t('传统密码或文字密码，输入任意一个','Your password or your text password')}>
               <TextInput
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={t('输入密码','Enter password')}
+                placeholder={t('传统密码或文字密码','Password or text password')}
                 autoComplete="current-password"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleLogin();

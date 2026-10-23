@@ -1,9 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-dark.svg">
-  <img src="docs/images/banner-light.svg" alt="Limet Otus Studio · 观隅鸮馆 — business workspace for photographers, version 3.0.0" width="100%">
+  <img src="docs/images/banner-light.svg" alt="Limet Otus Studio · 观隅鸮馆 — business workspace for photographers, version 3.1.1" width="100%">
 </picture>
 
-[![Version](https://img.shields.io/badge/version-3.0.0-111111?style=flat-square&labelColor=6b6b6b)](docs/English/Changelog.md)
+[![Version](https://img.shields.io/badge/version-3.1.1-111111?style=flat-square&labelColor=6b6b6b)](docs/English/Changelog.md)
 [![License](https://img.shields.io/badge/license-GPL--3.0--only-111111?style=flat-square&labelColor=6b6b6b)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%C2%B7%20Server-111111?style=flat-square&labelColor=6b6b6b)](docs/English/Deployment-manual.md)
 [![Docs](https://img.shields.io/badge/docs-English%20%C2%B7%20%E4%B8%AD%E6%96%87-e2231a?style=flat-square&labelColor=6b6b6b)](docs/English/README.md)
