@@ -85,7 +85,7 @@ Before cleanup, restoration or upgrades, check the records you need to retain. A
 
 ## 10. Desktop business backups and troubleshooting
 
-Each time the desktop app starts it opens the unlock window: enter the owner account name and either password, then select Unlock. The master key is stored only encrypted with the owner’s passwords and is not kept elsewhere on the computer; if both passwords are lost, the data on this computer cannot be recovered.
+Each time the desktop app starts it opens the unlock window: enter the owner account name and either password, then select Unlock. Keep your passwords safe and read the [keys and data recovery notice](../../NOTICE-KEYS.md).
 
 When the app shows an error, look up its wording in the [Error and message reference](Error-reference.md) for its meaning and resolution.
 
@@ -97,9 +97,9 @@ A failed Git initialisation, staging operation or commit stops the backup. On a 
 
 If saving fails, retain the input and resolve the synchronisation notice. Do not repeatedly overwrite conflicting records. Ask the operator to inspect service logs when the server is unavailable. Do not directly edit the database or installation directory during routine use.
 
-## 11. Lighting lab (beta)
+## 11. Lighting lab (experimental)
 
-Select Lighting lab in the side navigation. This is a beta feature: its results are estimates for planning a setup; rely on an actual meter reading.
+Select Lighting lab in the side navigation. This is an experimental feature: its results are estimates for planning a setup; rely on an actual meter reading.
 
 1. In the Equipment register under Business settings, enter each light with its guide number, energy or illuminance at 1 m, and its colour temperature, beam angle, colour rendering index and body shape. Missing values are estimated from similar lights.
 2. Open the lighting lab and place lights from From the register, or choose a preset under Lighting setup; the output of each light is solved for the camera aperture.

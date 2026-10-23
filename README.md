@@ -34,6 +34,7 @@ AI assistance was used in the development of this software.
 | **Assistant** | OpenAI-compatible or Anthropic models; every change needs your confirmation. Two personas, Limenotus and Limenotessa, with optional in-app speech recognition and synthesis |
 | **Command panel** | Fixed-grammar CLI for the super administrator, with preview and confirmation |
 | **Retention** | Retention from delivery, reminders, extension approvals, cleanup of client details |
+| **Lighting lab** *(experimental)* | Plan a setup with your own lights before the shoot: incident reading at the face, presets solved for your aperture, 3D preview with false colour, zebra and depth of field, exportable lighting sheets. Results are estimates; meter on set |
 | **Interface** | Chinese and English, dark and light themes, studio time zone, common ledger currencies |
 
 ### 03 — Screens
@@ -111,6 +112,7 @@ Copyright © 2026 FMLC.
 | **助手** | 接入 OpenAI 兼容接口或 Anthropic 接口的模型，任何修改都须你确认。两个化身隅鸮 Limenotus 与媱鸮 Limenotessa，语音识别与合成可在软件内安装 |
 | **命令面板** | 超级管理员使用的固定语法 CLI，写入前预览并确认 |
 | **资料留存** | 从交付起算保留期，到期提醒、延期审批与客户资料清理 |
+| **灯光测试**（实验性功能） | 拍摄前用自己的灯具预演布光：脸部入射测光读数，按光圈求出输出的布光方案，带伪色、斑马纹与景深的三维预览，可导出布光单。结果为估算，以现场测光为准 |
 | **界面** | 中文与英文、深色与浅色主题、工作室时区、常用记账币种 |
 
 ### 03 — 界面

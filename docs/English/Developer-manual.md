@@ -83,6 +83,20 @@ The frontend store `src/lib/store.tsx` synchronises every 1.5 seconds and immedi
 - Business documents, AI credentials and conversations are encrypted with AES-256-GCM using keys derived from `STUDIO_MASTER_KEY`, each bound to a purpose context. Passwords are stored with a slow hash.
 - Encrypted data cannot be read without the original `STUDIO_MASTER_KEY`.
 
+### 3.5 Lighting lab (experimental)
+
+| File | Responsibility |
+| --- | --- |
+| `src/lib/lighting.ts` | Light and modifier data, exposure and illuminance, solid angle of area lights, colour temperature and chromaticity, depth of field |
+| `src/lib/lighting-lab.ts` | three.js scene, meter readings, occlusion sampled across the emitting face, studio bounce, depth-of-field rendering; props and stands are Rapier rigid bodies |
+| `src/lib/occlusion-grid.ts` | Voxel grid of the subject for occlusion rays, walked cell by cell |
+| `src/lib/lighting-sheet.ts` | Reading and writing presets and lighting sheets |
+| `src/lib/studio-gear.ts` | Heads, modifiers, stands and props modelled at real size |
+| `src/lib/subject-loader.ts` | Loads a GLB, glTF or FBX subject and its textures from the chosen folder |
+| `src/app/lighting/` | The page |
+
+The algorithms and their sources are described in the Chinese [Lighting lab algorithm notes](../CN/灯光测试算法说明.md); cross-checks are in `tests/lighting-physics.cjs`.
+
 ## 4. Environment variables
 
 | Variable | Description |
@@ -172,6 +186,7 @@ Update `package.json`, `package-lock.json` and `src/lib/version.ts` together whe
 | `npm run typecheck` | TypeScript |
 | `npx eslint .` | Lint |
 | `npm run check` | Typecheck plus authentication and permissions, AI, first run, desktop, speech, assistant, CLI |
+| `npm run test:lighting` | Lighting physics cross-checks (included in `npm run check`) |
 | `npm run test:team` | Member attribution, ledger and shares |
 | `npm run test:v3-workflow` | V3 post-production and delivery |
 | `npm run test:retention` | Retention, extensions and cleanup |

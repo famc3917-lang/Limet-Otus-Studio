@@ -6,7 +6,7 @@ Limet Otus Studio is a business workspace for independent photographers and smal
 
 ## Users
 
-- [User manual](User-manual.md): creating a studio, orders through delivery, business overview, printing, AI and speech, retention, backups, lighting lab
+- [User manual](User-manual.md): creating a studio, orders through delivery, business overview, printing, AI and speech, retention, backups, lighting lab (experimental)
 - [Interface language](Interface-language.md): Chinese and English interfaces, currency and print templates
 - [CLI syntax manual](CLI-syntax-manual.md): the super administrator command panel
 
